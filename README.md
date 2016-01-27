@@ -1,5 +1,15 @@
 # DMX-Software
 
+Status: Frühentwicklung
+bisher realisiert: 
+- Standalone ATmega 1284P mit: 
+  - 8 Fadern
+  - Display 
+  - weitere Bedienelemente
+  - MIDI in
+  - DMX out
+  - Hard- und Software
+
 enthält:
 - Arduino Programm für DMX und Controller
 - Touch-Notebook-Steuerung mit Java
