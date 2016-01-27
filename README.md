@@ -1,6 +1,7 @@
 # DMX-Software
 
-Status: Frühentwicklung
+Status: Frühentwicklung,
+
 bisher realisiert: 
 - Standalone ATmega 1284P mit: 
   - 8 Fadern
