@@ -12,7 +12,7 @@ bisher realisiert:
   - Hard- und Software
 
 Repository enthält:
-- Arduino Programm für DMX und Controller
+- Arduino Programm für DMX und Controller (läuft)
 - Touch-Notebook-Steuerung mit Java
 - vielleicht: Android-Projekt zur Fernsteuerung
 
