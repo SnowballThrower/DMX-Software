@@ -1,0 +1,17 @@
+<Devices>
+	<Device Id="1" Channel="1">
+		<Type Id="1"></Type>
+		<Name>"American-DJ-Par"</Name>
+		<Additional>"Nicht auf der Deele"</Additional>
+	</Device>
+	<Device Id="2" Channel="40">
+		<Type Id="2"></Type>
+		<Name>"Renkforce-Par 1"</Name>
+		<Additional>"Kuhstall Haus-Seite"</Additional>
+	</Device>
+	<Device Id="3" Channel="50">
+		<Type Id="2"></Type>
+		<Name>"Renkforce-Par 2"</Name>
+		<Additional>"Kuhstall Tor-Seite"</Additional>
+	</Device>
+</Devices>
