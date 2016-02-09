@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sbentfeld.dmxsoftware;
+package SnowballThrower.dmxsoftware;
 
+import Processing.Devices;
+import SnowballThrower.dmxsoftware.Database.XMLReader;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -28,6 +30,7 @@ public class HelloWorldMain extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Hello World!");
+                Devices devices = new Devices();
             }
         });
         

@@ -10,8 +10,13 @@
 		<Additional>"Kuhstall Haus-Seite"</Additional>
 	</Device>
 	<Device Id="3" Channel="50">
-		<Type Id="2"></Type>
+		<Type Id="3"></Type>
 		<Name>"Renkforce-Par 2"</Name>
 		<Additional>"Kuhstall Tor-Seite"</Additional>
+	</Device>
+	<Device Id="4" Channel="100">
+		<Type Id="4"></Type>
+		<Name>"BAR 1"</Name>
+		<Additional>"Kuhstall Tor-Seite Mistfall"</Additional>
 	</Device>
 </Devices>

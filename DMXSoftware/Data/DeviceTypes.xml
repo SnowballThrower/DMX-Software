@@ -1,0 +1,235 @@
+<ExampleDevices>
+	<Device Id="1">
+		<Name>"AmericanDJ"</Name>
+		<Type>"Par"</Type>
+		<Power>"36"</Power>
+		<Symbol>"./Pictures/ADJ.png"</Symbol>
+		
+		<Channels No="7">
+		
+			<Channel Nr="1" F="Red">
+				<ChName>"Red"</ChName>
+				<Values case="0">
+					<conditions>
+						<condition Channel="6">
+							<range min="0" max="15"></range>
+						</condition>
+						<condition Channel="4">
+							<range min="0" max="15"></range>
+						</condition>
+					</conditions>
+				</Values>
+			</Channel>
+			
+			
+			<Channel Nr="2" F="Green">
+				<ChName>"Green"</ChName>
+				<Values case="0">
+					<conditions>
+						<condition Channel="6">
+							<range min="0" max="15"></range>
+						</condition>
+						<condition Channel="4">
+							<range min="0" max="15"></range>
+						</condition>
+					</conditions>
+				</Values>
+			</Channel>
+			
+			
+			<Channel Nr="3" F="Blue">
+				<ChName>"Blue"</ChName>
+				<Values case="0">
+					<conditions>
+						<condition Channel="6">
+							<range min="0" max="15"></range>
+						</condition>
+						<condition Channel="4">
+							<range min="0" max="15"></range>
+						</condition>
+					</conditions>
+				</Values>
+			</Channel>
+			
+			
+			<Channel Nr="4" F="Macro">
+				<ChName>"Macro"</ChName>
+				<Values case="0">
+					<conditions></conditions>
+					<Name>"Macro"</Name>
+					<Value low="0" high="15">"Color Mix"</Value>
+					<Value low="16" high="30">"Red"</Value>
+					<Value low="31" high="45">"Green"</Value>
+					<Value low="46" high="60">"Blue"</Value>
+					<Value low="61" high="75">"Yellow"</Value>
+					<Value low="76" high="90">"Cyan"</Value>
+				</Values>
+			</Channel>
+			
+			
+			<Channel Nr="5" F="Param1">
+				<ChName>"Speed/Sens"</ChName>
+				<Values case="0">
+					<conditions>
+						<condition Channel="6">
+							<range min="15" max="180"></range>
+							<range min="20" max="30"></range>
+						</condition>
+					</conditions>
+					<Name>"Speed"</Name>
+				</Values>
+				
+				<Values case="1">
+					<conditions>
+						<condition Channel="6">
+							<range min="181" max="255"></range>
+						</condition>
+					</conditions>
+					<Name>"Sensitivity"</Name>
+					
+				</Values>
+			</Channel>
+			
+			
+			<Channel Nr="7" F="Dimmer">
+				<ChName>"Dimmer"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+					<Value low="0" high="255">"1:1"</Value>
+				</Values>
+			</Channel>
+			
+		</Channels>
+	</Device>
+	
+	
+	<Device Id="2">
+		<Name>"Renkforce RDM Par_10"</Name>
+		<Type>"Par"</Type>
+		<Power>"60"</Power>
+		<Symbol>"./Pictures/RenkforceRDM_10.png"</Symbol>
+		
+		<Channels No="10">
+		<Channel Nr="1" F="Red">
+				<ChName>"Red"</ChName>
+				<Values case="0">
+					<conditions>
+						<condition Channel="6">
+							<range min="0" max="15"></range>
+						</condition>
+						<condition Channel="4">
+							<range min="0" max="15"></range>
+						</condition>
+					</conditions>
+					<Value low="0" high="255">"1:1"</Value>
+				</Values>
+			</Channel>
+		</Channels>
+	</Device>
+	
+	<Device Id="3">
+		<Name>"Renkforce RDM Par_5"</Name>
+		<Type>"Par"</Type>
+		<Power>"60"</Power>
+		<Symbol>"./Pictures/RenkforceRDM_5.png"</Symbol>
+		
+		<Channels No="5">
+		
+			<Channel Nr="1" F="Red">
+				<ChName>"Red"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+					<Value low="0" high="255">"1:1"</Value>
+				</Values>
+			</Channel>
+			
+			<Channel Nr="2" F="Green">
+				<ChName>"Green"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+					<Value low="0" high="255">"1:1"</Value>
+				</Values>
+			</Channel>
+			<Channel Nr="3" F="Blue">
+				<ChName>"Blue"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+					<Value low="0" high="255">"1:1"</Value>
+				</Values>
+			</Channel>
+			<Channel Nr="4" F="White">
+				<ChName>"White"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+					<Value low="0" high="255">"1:1"</Value>
+				</Values>
+			</Channel>
+			<Channel Nr="5" F="Amber">
+				<ChName>"Amber"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+					<Value low="0" high="255">"1:1"</Value>
+				</Values>
+			</Channel>
+		</Channels>
+	</Device>
+	
+	
+	<Device Id="4">
+		<Name>"Stairville LED Bar 24"</Name>
+		<Type>"Bar"</Type>
+		<Power>"36"</Power>
+		<Symbol>"./Pictures/Bar24.png"</Symbol>
+		
+		<Channels No="24">
+			<Channel Nr="1" F="Red">
+				<ChName>"Red1"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="2" F="Green">
+				<ChName>"Green1"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="3" F="Blue">
+				<ChName>"Blue1"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="4" F="Red">
+				<ChName>"Red2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="5" F="Green">
+				<ChName>"Green2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="6" F="Blue">
+				<ChName>"Blue2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+		</Channels>
+	</Device>
+</ExampleDevices>
