@@ -5,10 +5,14 @@
  */
 package SnowballThrower.dmxsoftware.Surface;
 
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 /**
  *
  * @author Sven
  */
 public class SettingSurface {
-    
+    Stage settings;
+    Scene general;
 }

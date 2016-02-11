@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Processing;
+package SnowballThrower.dmxsoftware.Processing;
 
 import SnowballThrower.dmxsoftware.Database.Device;
 import SnowballThrower.dmxsoftware.Database.DeviceType;

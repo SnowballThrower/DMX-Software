@@ -49,11 +49,11 @@ public class XMLReader {
                     Device device = new Device();
                     Element devElement = (Element) devNode;
 
-                    device.id = devElement.getAttribute("Id");
-                    device.startChannel = Integer.parseInt((devElement.getAttribute("Channel")).replaceAll("\"", ""));
-                    device.name = devElement.getElementsByTagName("Name").item(0).getTextContent();
-                    device.addition = devElement.getElementsByTagName("Additional").item(0).getTextContent();
-                    device.typeId = ((Element) devElement.getElementsByTagName("Type").item(0)).getAttribute("Id");
+                    device.id = rem(devElement.getAttribute("Id"));
+                    device.startChannel = Integer.parseInt(rem(devElement.getAttribute("Channel")));
+                    device.name = rem(devElement.getElementsByTagName("Name").item(0).getTextContent());
+                    device.addition = rem(devElement.getElementsByTagName("Additional").item(0).getTextContent());
+                    device.typeId = rem(((Element) devElement.getElementsByTagName("Type").item(0)).getAttribute("Id"));
                     System.out.println(device.name + " " + device.typeId);
                     list.add(device);
                 }
@@ -93,19 +93,19 @@ public class XMLReader {
                     Element deviceElement = (Element) deviceNode;
                     DeviceType dev = new DeviceType();
 
-                    dev.id = deviceElement.getAttribute("Id");
-                    dev.name = deviceElement.getElementsByTagName("Name")
-                            .item(0).getTextContent();
-                    dev.type = Type.getType(deviceElement.getElementsByTagName("Type")
+                    dev.id = rem(deviceElement.getAttribute("Id"));
+                    dev.name = rem(deviceElement.getElementsByTagName("Name")
                             .item(0).getTextContent());
-                    dev.picturePath = deviceElement.getElementsByTagName("Symbol")
-                            .item(0).getTextContent();
-                    dev.power = Integer.parseInt(deviceElement.getElementsByTagName("Power")
-                            .item(0).getTextContent().replaceAll("\"", ""));
+                    dev.type = Type.getType(rem(deviceElement.getElementsByTagName("Type")
+                            .item(0).getTextContent()));
+                    dev.picturePath = rem(deviceElement.getElementsByTagName("Symbol")
+                            .item(0).getTextContent());
+                    dev.power = Integer.parseInt(rem(deviceElement.getElementsByTagName("Power")
+                            .item(0).getTextContent()));
                     System.out.println(dev.name);
                     Node channelMasterNode = deviceElement.getElementsByTagName("Channels").item(0);
                     Element channelMasterElement = (Element) channelMasterNode;
-                    dev.channelNumber = Integer.parseInt(channelMasterElement.getAttribute("No"));
+                    dev.channelNumber = Integer.parseInt(rem(channelMasterElement.getAttribute("No")));
                     NodeList channelNodeList = channelMasterElement.getElementsByTagName("Channel");
                     Channel[] channels = new Channel[dev.channelNumber];
 
@@ -118,10 +118,10 @@ public class XMLReader {
                         if (channelNode.getNodeType() == Node.ELEMENT_NODE) {
 
                             Element channelElement = (Element) channelNode;
-                            channel.number = Integer.parseInt(channelElement.getAttribute("Nr"));
-                            channel.funcion = Function.toFunction(channelElement.getAttribute("F"));
-                            channel.name = channelElement.getElementsByTagName("ChName")
-                                    .item(0).getTextContent();
+                            channel.number = Integer.parseInt(rem(channelElement.getAttribute("Nr")));
+                            channel.funcion = Function.toFunction(rem(channelElement.getAttribute("F")));
+                            channel.name = rem(channelElement.getElementsByTagName("ChName")
+                                    .item(0).getTextContent());
                             System.out.println(channel.name);
                             channel.meanings = getMeanings(channelElement);
                             System.out.println();
@@ -154,7 +154,7 @@ public class XMLReader {
                 m.conditions = new LinkedList<Condition>();
                 m.values = new LinkedList<Value>();
                 try {
-                    m.name = meaningElement.getElementsByTagName("Name").item(0).getTextContent();
+                    m.name = rem(meaningElement.getElementsByTagName("Name").item(0).getTextContent());
                 } catch (NullPointerException npex) {
                     m.name = null;
                 }
@@ -165,11 +165,11 @@ public class XMLReader {
                 System.out.println(m.name);
                 for (int valueCount = 0; valueCount < valueList.getLength(); valueCount++) {
                     Value value = new Value();
-                    value.value = ((Element) valueList.item(valueCount)).getTextContent();
-                    value.min = Integer.parseInt((((Element) valueList.item(valueCount))
-                            .getAttribute("low")).replaceAll("\"", ""));
-                    value.max = Integer.parseInt((((Element) valueList.item(valueCount))
-                            .getAttribute("high")).replaceAll("\"", ""));
+                    value.value = rem(((Element) valueList.item(valueCount)).getTextContent());
+                    value.min = Integer.parseInt(rem(((Element) valueList.item(valueCount))
+                            .getAttribute("low")));
+                    value.max = Integer.parseInt(rem(((Element) valueList.item(valueCount))
+                            .getAttribute("high")));
                     System.out.println(value.min + " - " + value.max + ": " + value.value);
                     m.values.add(value);
                 }
@@ -192,7 +192,7 @@ public class XMLReader {
 
                 Element conditionElement = (Element) conditionList.item(conditionCount);
 
-                condition.Channel = Integer.parseInt((conditionElement.getAttribute("Channel")).replaceAll("\"", ""));
+                condition.Channel = Integer.parseInt(rem(conditionElement.getAttribute("Channel")));
                 System.out.println("Channel " + condition.Channel);
 
                 if (conditionElement != null) {
@@ -200,10 +200,10 @@ public class XMLReader {
                     for (int rangeCount = 0; rangeCount
                             < conditionRangeList.getLength(); rangeCount++) {
                         Range range = new Range();
-                        range.min = Integer.parseInt((((Element) conditionRangeList.item(rangeCount))
-                                .getAttribute("min")).replaceAll("\"", ""));
-                        range.max = Integer.parseInt((((Element) conditionRangeList.item(rangeCount))
-                                .getAttribute("max")).replaceAll("\"", ""));
+                        range.min = Integer.parseInt(rem(((Element) conditionRangeList.item(rangeCount))
+                                .getAttribute("min")));
+                        range.max = Integer.parseInt(rem(((Element) conditionRangeList.item(rangeCount))
+                                .getAttribute("max")));
                         condition.ranges.add(range);
                         System.out.println(range.min + " - " + range.max);
                     }
@@ -212,5 +212,8 @@ public class XMLReader {
             }
         }
         return conditions;
+    }
+    String rem(String string){
+        return string.replaceAll("\"","");
     }
 }

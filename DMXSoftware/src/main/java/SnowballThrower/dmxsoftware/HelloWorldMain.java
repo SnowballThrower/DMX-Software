@@ -5,7 +5,7 @@
  */
 package SnowballThrower.dmxsoftware;
 
-import Processing.Devices;
+import SnowballThrower.dmxsoftware.Processing.Devices;
 import SnowballThrower.dmxsoftware.Database.XMLReader;
 import javafx.application.Application;
 import javafx.event.ActionEvent;

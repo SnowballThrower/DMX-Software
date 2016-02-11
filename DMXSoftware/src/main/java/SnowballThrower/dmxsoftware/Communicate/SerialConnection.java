@@ -10,5 +10,10 @@ package SnowballThrower.dmxsoftware.Communicate;
  * @author Sven
  */
 public class SerialConnection {
-    
+    void sendValue(int CHannel, int Value){
+        
+    }
+    void sendConfig(){
+        
+    }
 }

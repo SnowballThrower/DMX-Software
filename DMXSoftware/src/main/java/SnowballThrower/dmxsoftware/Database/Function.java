@@ -10,8 +10,15 @@ package SnowballThrower.dmxsoftware.Database;
  * @author Sven
  */
 public enum Function {
-    Red, Green, Blue, White, Amber, UV, 
-    Dimmer, Strobe, Speed, Macro, Program, Pan, Tilt, Curve, Other;
+    //Colors
+    Red, Green, Blue, White, Amber, UV, Hue, Sat, Vol, 
+    //General Functions
+    Dimmer, Strobe, Speed, Macro, Program, 
+    //Moving Heads
+    Gobo, Rotation, Zoom, Prism, Shutter, ColorWheel, 
+    Pan, Tilt, PanSpeed, TiltSpeed, PanLow, PanHigh, TiltLow, TiltHigh,
+    //Specific
+    Laser, DimCurve, TurnOff, Other;
 
     static Function toFunction(String string) {
         try {

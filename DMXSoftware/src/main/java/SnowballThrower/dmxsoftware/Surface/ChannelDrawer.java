@@ -5,20 +5,16 @@
  */
 package SnowballThrower.dmxsoftware.Surface;
 
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import SnowballThrower.dmxsoftware.Database.Function;
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
 
 /**
  *
  * @author Sven
  */
-public class ControlSurface {
-    Scene bars;
-    Scene faders;
-    Scene pultRouting;
-    Scene groups;
-    Scene presets;
-    Scene Devices;
-    Scene Device;
-    Stage stage;
+public class ChannelDrawer {
+    Group getChannel(int value, Function func){
+        return new Group();
+    }
 }

@@ -15,7 +15,7 @@ public enum Type {
 
     static Type getType(String string) {
         try {
-            return Type.valueOf(string.replaceAll("\"",""));
+            return Type.valueOf(string);
         } catch (IllegalArgumentException iaex) {
             return Other;
         }
