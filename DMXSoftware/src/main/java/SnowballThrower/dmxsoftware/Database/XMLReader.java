@@ -119,7 +119,7 @@ public class XMLReader {
 
                             Element channelElement = (Element) channelNode;
                             channel.number = Integer.parseInt(rem(channelElement.getAttribute("Nr")));
-                            channel.funcion = Function.toFunction(rem(channelElement.getAttribute("F")));
+                            channel.function = Function.toFunction(rem(channelElement.getAttribute("F")));
                             channel.name = rem(channelElement.getElementsByTagName("ChName")
                                     .item(0).getTextContent());
                             System.out.println(channel.name);

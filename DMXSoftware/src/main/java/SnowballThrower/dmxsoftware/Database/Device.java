@@ -46,4 +46,8 @@ public class Device {
     public DeviceType getType() {
         return this.type;
     }
+
+    public String getImagePath() {
+        return type.picturePath;
+    }
 }

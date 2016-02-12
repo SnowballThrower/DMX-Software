@@ -11,19 +11,25 @@ import java.util.List;
  *
  * @author Sven
  */
-class Channel {
+public class Channel {
+
     String name;
     int number;
-    Function funcion;
+    Function function;
     List<Meaning> meanings;
-    String getMeaning(int value, int[] values){
+
+    String getMeaning(int value, int[] values) {
         int i;
-        for(i=0;i<meanings.size();i++){
-            if(meanings.get(i).met(values)){
+        for (i = 0; i < meanings.size(); i++) {
+            if (meanings.get(i).met(values)) {
                 return meanings.get(i).getMeaning(value);
             }
         }
-        return value+"";
+        return value + "";
+    }
+
+    public Function getFunction() {
+        return function;
     }
 
 }

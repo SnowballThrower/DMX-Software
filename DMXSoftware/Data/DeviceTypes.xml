@@ -3,7 +3,7 @@
 		<Name>"AmericanDJ"</Name>
 		<Type>"Par"</Type>
 		<Power>"36"</Power>
-		<Symbol>"./Pictures/ADJ.png"</Symbol>
+		<Symbol>"http://static.americandj.eu/media/catalog/product/cache/0/image/9df78eab33525d08d6e5fb8d27136e95/3/0/304155_2.jpg"</Symbol>
 		
 		<Channels No="7">
 		
@@ -108,7 +108,7 @@
 		<Name>"Renkforce RDM Par_10"</Name>
 		<Type>"Par"</Type>
 		<Power>"60"</Power>
-		<Symbol>"./Pictures/RenkforceRDM_10.png"</Symbol>
+		<Symbol>"https://www.conrad.de/medias/global/ce/6000_6999/6400/6440/6448/1301624_LB_00_FB.EPS_1000.jpg"</Symbol>
 		
 		<Channels No="10">
 		<Channel Nr="1" F="Red">
@@ -132,7 +132,7 @@
 		<Name>"Renkforce RDM Par_5"</Name>
 		<Type>"Par"</Type>
 		<Power>"60"</Power>
-		<Symbol>"./Pictures/RenkforceRDM_5.png"</Symbol>
+		<Symbol>"Data/Pictures/RenkforceRDM_5.png"</Symbol>
 		
 		<Channels No="5">
 		
@@ -185,7 +185,7 @@
 		<Name>"Stairville LED Bar 24"</Name>
 		<Type>"Bar"</Type>
 		<Power>"36"</Power>
-		<Symbol>"./Pictures/Bar24.png"</Symbol>
+		<Symbol>"https://www.thomann.de/pics/bdb/294835/6519071_800.jpg"</Symbol>
 		
 		<Channels No="24">
 			<Channel Nr="1" F="Red">
@@ -224,6 +224,132 @@
 				</Values>
 			</Channel>
 			<Channel Nr="6" F="Blue">
+				<ChName>"Blue2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="7" F="Red">
+				<ChName>"Red2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="8" F="Green">
+				<ChName>"Green2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="9" F="Blue">
+				<ChName>"Blue2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="10" F="Red">
+				<ChName>"Red2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="11" F="Green">
+				<ChName>"Green2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="12" F="Blue">
+				<ChName>"Blue2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="13" F="Red">
+				<ChName>"Red2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="14" F="Green">
+				<ChName>"Green2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="15" F="Blue">
+				<ChName>"Blue2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="16" F="Red">
+				<ChName>"Red2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="17" F="Green">
+				<ChName>"Green2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="18" F="Blue">
+				<ChName>"Blue2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="19" F="Red">
+				<ChName>"Red2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="20" F="Green">
+				<ChName>"Green2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="21" F="Blue">
+				<ChName>"Blue2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="22" F="Red">
+				<ChName>"Red2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="23" F="Green">
+				<ChName>"Green2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			<Channel Nr="24" F="Blue">
 				<ChName>"Blue2"</ChName>
 				<Values case="0">
 					<conditions>

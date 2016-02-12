@@ -34,11 +34,11 @@ public class FaderListener implements EventHandler<MouseEvent> {
         for (Fader fader : faders) {
             if (e.getX() >= fader.getPosX() + fader.getFrameX()
                     && e.getX() <= fader.getPosX() + fader.getWidth() - fader.getFrameX()
-                    && e.getY() >= fader.getPosY() + fader.getFrameY()
-                    && e.getY() <= fader.getPosY() + fader.getHeight() - fader.getFrameY()) {
-                fader.setValue((int) ((fader.getHeight() - fader.getFrameY()
+                    && e.getY() >= fader.getPosY()
+                    && e.getY() <= fader.getPosY() + fader.getHeight()) {
+                fader.setValue(constrain((int) ((fader.getHeight() - fader.getFrameY()
                         - e.getY() + fader.getPosY())
-                        * 255 / (fader.getHeight() - 2 * fader.getFrameY())));
+                        * 255 / (fader.getHeight() - 2 * fader.getFrameY()))));
             }
         }
     }
@@ -46,6 +46,19 @@ public class FaderListener implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent event) {
         mouseClicked(event);
+    }
+
+    public void translate(double x, double y){
+        
+    }
+    private int constrain(int i) {
+        if (i > 255) {
+            return 255;
+        }
+        if (i < 0) {
+            return 0;
+        }
+        return i;
     }
 
 }

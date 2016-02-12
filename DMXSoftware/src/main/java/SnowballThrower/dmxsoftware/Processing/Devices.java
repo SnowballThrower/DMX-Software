@@ -33,7 +33,7 @@ public class Devices {
             }
         }
         System.out.println("have merged.");
-        showDevs();
+        //showDevs();
     }
 
     private void showDevs() {
@@ -43,12 +43,16 @@ public class Devices {
             System.out.println(device.getType().getChannelNames());
             int[] values = new int[device.getType().getChannelNumber()];
             for (int v = 0; v < 256; v++) {
-                for (int x = 0; x<device.getType().getChannelNumber();x++) {
-                    values[x]=v;
-                    System.out.println(device.getType().getMeaning(x, values)+device.getType().getChannelName(x));
+                for (int x = 0; x < device.getType().getChannelNumber(); x++) {
+                    values[x] = v;
+                    System.out.println(device.getType().getMeaning(x, values) + device.getType().getChannelName(x));
                 }
-                
+
             }
         }
+    }
+
+    public List<Device> getDevices() {
+        return this.devices;
     }
 }

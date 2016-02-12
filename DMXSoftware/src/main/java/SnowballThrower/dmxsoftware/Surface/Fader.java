@@ -5,6 +5,7 @@
  */
 package SnowballThrower.dmxsoftware.Surface;
 
+import SnowballThrower.dmxsoftware.Database.Channel;
 import SnowballThrower.dmxsoftware.Database.Function;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -30,8 +31,8 @@ public class Fader {
     Group fader;
     int max = 255;
 
-    public Fader(Function function, double posX, double posY, double width, double height) {
-        this.function = function;
+    public Fader(double posX, double posY, double width, double height, Channel channel) {
+        this.function = channel.getFunction();
         this.width = width;
         this.height = height;
         this.posX = posX;
@@ -47,7 +48,7 @@ public class Fader {
 
     public void setValue(int value) {
         this.value = value;
-        head.setTranslateY(height - 2 * frameY - ((height - 2 * frameY) / max) * value);
+        head.setTranslateY(-((height - 2 * frameY) / max) * value);
         System.out.println(value);
     }
 
@@ -81,21 +82,21 @@ public class Fader {
 
     private Group getHead() {
         double vert = height * 0.05;
-        Rectangle rect = new Rectangle(frameX, frameY - 0.5 * vert, width - 2 * frameX, vert);
+        Rectangle rect = new Rectangle(frameX, height - frameY - 0.5 * vert, width - 2 * frameX, vert);
         rect.setFill(Color.GREY);
         return new Group(rect);
     }
 
     private Group getBackGround() {
         Rectangle rect = new Rectangle(0, 0, width, height);
-        rect.setFill(null);
+        rect.setFill(Color.LIGHTGRAY);
         rect.setStroke(Color.BLACK);
         switch (function) {
             case Red:
                 rect.setFill(Color.RED);
                 break;
             case Green:
-                rect.setFill(Color.GREEN);
+                rect.setFill(Color.LIMEGREEN);
                 break;
             case Blue:
                 rect.setFill(Color.BLUE);

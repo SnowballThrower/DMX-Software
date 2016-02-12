@@ -47,7 +47,7 @@ public class DeviceType {
         if (channels != null) {
             for (Channel channel : channels) {
                 if (channel != null) {
-                    string = string + "  " + channel.name + " " + channel.funcion;
+                    string = string + "  " + channel.name + " " + channel.function;
                 }
             }
         } else {
@@ -65,6 +65,10 @@ public class DeviceType {
             }
         }
         return "no Channel";
+    }
+
+    public Channel[] getChannels() {
+        return channels;
     }
 
 }
