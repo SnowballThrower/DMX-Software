@@ -10,10 +10,17 @@ package SnowballThrower.dmxsoftware.Communicate;
  * @author Sven
  */
 public class SerialConnection {
-    void sendValue(int CHannel, int Value){
-        
+
+    final static int BYTE_MAX = 255;
+    final static int MAX_CH = 1023;
+
+    void sendValue(int channel, int value) {
+        if (channel >= 0 && channel < MAX_CH && value >= 0 && value <= BYTE_MAX) {
+
+        }
     }
-    void sendConfig(){
-        
+
+    void sendConfig() {
+
     }
 }

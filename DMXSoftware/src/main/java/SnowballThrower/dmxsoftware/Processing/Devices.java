@@ -32,7 +32,7 @@ public class Devices {
                 }
             }
         }
-        System.out.println("have connected.");
+        System.out.println("have merged.");
         showDevs();
     }
 
@@ -42,9 +42,6 @@ public class Devices {
             System.out.println(device.getName() + ": " + device.getType().getName() + ", " + device.getType().getType());
             System.out.println(device.getType().getChannelNames());
             int[] values = new int[device.getType().getChannelNumber()];
-            for (int value : values) {
-                value = 0;
-            }
             for (int v = 0; v < 256; v++) {
                 for (int x = 0; x<device.getType().getChannelNumber();x++) {
                     values[x]=v;

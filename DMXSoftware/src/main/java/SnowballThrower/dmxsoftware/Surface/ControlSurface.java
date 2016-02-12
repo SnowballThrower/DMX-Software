@@ -18,7 +18,9 @@ public class ControlSurface {
     Scene pultRouting;
     Scene groups;
     Scene presets;
-    Scene Devices;
-    Scene Device;
+    Scene devices;
+    Scene device;
     Stage stage;
+    double windowHeight;
+    double windowWidth;
 }
