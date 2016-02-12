@@ -50,4 +50,8 @@ public class Device {
     public String getImagePath() {
         return type.picturePath;
     }
+
+    public int getStartCh() {
+        return this.startChannel;
+    }
 }

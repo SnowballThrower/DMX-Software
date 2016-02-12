@@ -19,17 +19,17 @@
 		<Name>"BAR 1"</Name>
 		<Additional>"Kuhstall Tor-Seite Mistfall"</Additional>
 	</Device>
-	<Device Id="5" Channel="125">
+	<Device Id="5" Channel="124">
 		<Type Id="4"></Type>
 		<Name>"BAR 2"</Name>
 		<Additional>"Kuhstall Tor-Seite Deele"</Additional>
 	</Device>
-	<Device Id="6" Channel="150">
+	<Device Id="6" Channel="148">
 		<Type Id="4"></Type>
 		<Name>"BAR 3"</Name>
 		<Additional>"Kuhstall Haus-Seite Mistfall"</Additional>
 	</Device>
-	<Device Id="7" Channel="175">
+	<Device Id="7" Channel="172">
 		<Type Id="4"></Type>
 		<Name>"BAR 4"</Name>
 		<Additional>"Kuhstall Haus-Seite Deele"</Additional>

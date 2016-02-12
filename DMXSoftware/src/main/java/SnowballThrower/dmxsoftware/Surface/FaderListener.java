@@ -5,6 +5,7 @@
  */
 package SnowballThrower.dmxsoftware.Surface;
 
+import SnowballThrower.dmxsoftware.Processing.Manage;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.event.EventHandler;
@@ -17,13 +18,21 @@ import javafx.scene.input.MouseEvent;
 public class FaderListener implements EventHandler<MouseEvent> {
 
     List<Fader> faders;
+    private Manage manager;
 
     public FaderListener() {
         faders = new LinkedList<Fader>();
     }
 
+    FaderListener(Manage manager) {
+        this.manager = manager;
+        faders = new LinkedList<Fader>();
+    }
+
     public void addFader(Fader fader) {
-        faders.add(fader);
+        if (fader != null) {
+            faders.add(fader);
+        }
     }
 
     public void removeFader(Fader fader) {
@@ -39,6 +48,7 @@ public class FaderListener implements EventHandler<MouseEvent> {
                 fader.setValue(constrain((int) ((fader.getHeight() - fader.getFrameY()
                         - e.getY() + fader.getPosY())
                         * 255 / (fader.getHeight() - 2 * fader.getFrameY()))));
+                manager.handle(fader.getID(), fader.getValue());
             }
         }
     }
@@ -48,9 +58,10 @@ public class FaderListener implements EventHandler<MouseEvent> {
         mouseClicked(event);
     }
 
-    public void translate(double x, double y){
-        
+    public void translate(double x, double y) {
+
     }
+
     private int constrain(int i) {
         if (i > 255) {
             return 255;

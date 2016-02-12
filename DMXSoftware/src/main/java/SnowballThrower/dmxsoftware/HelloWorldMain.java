@@ -5,16 +5,12 @@
  */
 package SnowballThrower.dmxsoftware;
 
-import SnowballThrower.dmxsoftware.Database.Function;
 import SnowballThrower.dmxsoftware.Processing.Devices;
-import SnowballThrower.dmxsoftware.Database.XMLReader;
+import SnowballThrower.dmxsoftware.Processing.Manage;
 import SnowballThrower.dmxsoftware.Surface.ControlSurface;
-import SnowballThrower.dmxsoftware.Surface.Fader;
-import SnowballThrower.dmxsoftware.Surface.FaderListener;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -28,6 +24,7 @@ public class HelloWorldMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        Manage mng = new Manage();
         Button btn = new Button();
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -35,8 +32,9 @@ public class HelloWorldMain extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Hello World!");
+                mng.startMidi();
                 Devices devices = new Devices();
-                new ControlSurface(devices.getDevices());
+                ControlSurface cs = new ControlSurface(mng, devices.getDevices());
             }
         });
 

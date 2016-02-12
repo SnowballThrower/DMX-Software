@@ -129,14 +129,23 @@
 	</Device>
 	
 	<Device Id="3">
-		<Name>"Renkforce RDM Par_5"</Name>
+		<Name>"Renkforce RDM Par_10"</Name>
 		<Type>"Par"</Type>
 		<Power>"60"</Power>
 		<Symbol>"Data/Pictures/RenkforceRDM_5.png"</Symbol>
 		
-		<Channels No="5">
+		<Channels No="10">
 		
-			<Channel Nr="1" F="Red">
+			<Channel Nr="1" F="Dimmer">
+				<ChName>"Dimmer"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+					<Value low="0" high="255">"1:1"</Value>
+				</Values>
+			</Channel>
+			
+			<Channel Nr="2" F="Red">
 				<ChName>"Red"</ChName>
 				<Values case="0">
 					<conditions>
@@ -145,7 +154,7 @@
 				</Values>
 			</Channel>
 			
-			<Channel Nr="2" F="Green">
+			<Channel Nr="3" F="Green">
 				<ChName>"Green"</ChName>
 				<Values case="0">
 					<conditions>
@@ -153,7 +162,7 @@
 					<Value low="0" high="255">"1:1"</Value>
 				</Values>
 			</Channel>
-			<Channel Nr="3" F="Blue">
+			<Channel Nr="4" F="Blue">
 				<ChName>"Blue"</ChName>
 				<Values case="0">
 					<conditions>
@@ -161,7 +170,7 @@
 					<Value low="0" high="255">"1:1"</Value>
 				</Values>
 			</Channel>
-			<Channel Nr="4" F="White">
+			<Channel Nr="5" F="White">
 				<ChName>"White"</ChName>
 				<Values case="0">
 					<conditions>
@@ -169,7 +178,7 @@
 					<Value low="0" high="255">"1:1"</Value>
 				</Values>
 			</Channel>
-			<Channel Nr="5" F="Amber">
+			<Channel Nr="6" F="Amber">
 				<ChName>"Amber"</ChName>
 				<Values case="0">
 					<conditions>

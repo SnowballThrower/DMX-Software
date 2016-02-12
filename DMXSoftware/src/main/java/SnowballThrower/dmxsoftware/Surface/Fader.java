@@ -30,8 +30,9 @@ public class Fader {
     Group head;
     Group fader;
     int max = 255;
+    private String Id;
 
-    public Fader(double posX, double posY, double width, double height, Channel channel) {
+    public Fader(String id, double posX, double posY, double width, double height, Channel channel) {
         this.function = channel.getFunction();
         this.width = width;
         this.height = height;
@@ -44,6 +45,7 @@ public class Fader {
         fader = new Group(background, head);
         fader.setLayoutX(posX);
         fader.setLayoutY(posY);
+        this.Id = id;
     }
 
     public void setValue(int value) {
@@ -121,5 +123,9 @@ public class Fader {
 
     double getHeight() {
         return height;
+    }
+
+    String getID() {
+        return Id;
     }
 }
