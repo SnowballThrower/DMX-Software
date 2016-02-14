@@ -7,6 +7,7 @@ package SnowballThrower.dmxsoftware.Processing;
 
 import SnowballThrower.dmxsoftware.Database.Function;
 import java.awt.Color;
+import javafx.scene.paint.Paint;
 
 /**
  *
@@ -34,5 +35,11 @@ public class ValueConverter {
             default:
                 return -1;
         }
+    }
+    
+    public Color stringToColor(String string){
+        string = string.toUpperCase();
+        Color color = Color.getColor(string, Color.LIGHT_GRAY);
+        return color;
     }
 }

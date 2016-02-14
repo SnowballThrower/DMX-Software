@@ -24,7 +24,7 @@ public class Manage {
     }
 
     public void send(int channel, int value) {
-        if (channel < 16 * 12 && channel > 0 && value > 0 && value < 256) {
+        if (channel < 16 * 12 && channel >= 0 && value >= 0 && value < 256) {
             mc.change(channel, value);
         }
     }
@@ -33,12 +33,11 @@ public class Manage {
         try {
             int ch = Integer.parseInt(id);
             if (ch < 1000) {
-                System.out.println("Change: " + id + " ," + value);
+                //System.out.println("Change: " + id + " ," + value);
                 send(ch - 1, value);
-                return;
             }
         } catch (Exception ex) {
-
+            System.out.println("no id: " + id);
         }
     }
 

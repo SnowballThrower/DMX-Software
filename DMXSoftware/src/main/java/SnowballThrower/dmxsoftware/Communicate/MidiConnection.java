@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
-import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.ShortMessage;
@@ -27,6 +26,7 @@ public class MidiConnection extends Thread {
     private int[] valOld;
     int[] valNew;
     boolean stop;
+    private long SLEEP = 2;
 
     public MidiConnection() {
         stop = false;
@@ -61,8 +61,8 @@ public class MidiConnection extends Thread {
     }
 
     private void send(int channel, int value) {
-        System.out.println("Midi send: " + channel + " ," + value / 2);
-        System.out.println("Midi send: " + (CONTROL_CHANGE + channel / 128) + " ," + channel % 128 + " ," + value / 2);
+        //System.out.println("Midi send: " + channel + " ," + value / 2);
+        //System.out.println("Midi send: " + (CONTROL_CHANGE + channel / 128) + " ," + channel % 128 + " ," + value / 2);
         try {
             ShortMessage message = new ShortMessage(CONTROL_CHANGE, channel / 128, channel % 128, value / 2);
             try {
@@ -82,10 +82,16 @@ public class MidiConnection extends Thread {
     private void loop() {
         int i;
         for (i = 0; i < MAX_CH; i++) {
-            if (valOld[i] != valNew[i]) {
-                send(i, valNew[i]);
-                valOld[i] = valNew[i];
+            int valBuff = valNew[i];
+            if (valOld[i] != valBuff) {
+                valOld[i] = valBuff;
+                send(i, valOld[i]);
             }
+        }
+        try {
+            Thread.sleep(SLEEP);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

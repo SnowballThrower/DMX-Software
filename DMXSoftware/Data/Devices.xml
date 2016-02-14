@@ -5,7 +5,7 @@
 		<Additional>"Nicht auf der Deele"</Additional>
 	</Device>
 	<Device Id="2" Channel="40">
-		<Type Id="2"></Type>
+		<Type Id="3"></Type>
 		<Name>"Renkforce-Par 1"</Name>
 		<Additional>"Kuhstall Haus-Seite"</Additional>
 	</Device>
@@ -13,6 +13,21 @@
 		<Type Id="3"></Type>
 		<Name>"Renkforce-Par 2"</Name>
 		<Additional>"Kuhstall Tor-Seite"</Additional>
+	</Device>
+	<Device Id="8" Channel="20">
+		<Type Id="5"></Type>
+		<Name>"Outdoor 1"</Name>
+		<Additional>"Deele Haus"</Additional>
+	</Device>
+	<Device Id="9" Channel="10">
+		<Type Id="6"></Type>
+		<Name>"Cameo Par"</Name>
+		<Additional>"Deele Mitte"</Additional>
+	</Device>
+	<Device Id="10" Channel="30">
+		<Type Id="5"></Type>
+		<Name>"Outdoor 2"</Name>
+		<Additional>"Deele Tor"</Additional>
 	</Device>
 	<Device Id="4" Channel="100">
 		<Type Id="4"></Type>
@@ -27,11 +42,11 @@
 	<Device Id="6" Channel="148">
 		<Type Id="4"></Type>
 		<Name>"BAR 3"</Name>
-		<Additional>"Kuhstall Haus-Seite Mistfall"</Additional>
+		<Additional>"Kuhstall Haus-Seite Deele"</Additional>
 	</Device>
 	<Device Id="7" Channel="172">
 		<Type Id="4"></Type>
 		<Name>"BAR 4"</Name>
-		<Additional>"Kuhstall Haus-Seite Deele"</Additional>
+		<Additional>"Kuhstall Haus-Seite Mistfall"</Additional>
 	</Device>
 </Devices>

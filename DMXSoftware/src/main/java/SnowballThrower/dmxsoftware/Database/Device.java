@@ -23,11 +23,11 @@ public class Device {
         return values[channel];
     }
 
-    String getMeaning(int channel) {
+    public String getMeaning(int channel) {
         return type.getMeaning(channel, values);
     }
 
-    String getChannelName(int channel) {
+    public String getChannelName(int channel) {
         return type.channels[channel].name;
     }
 
@@ -53,5 +53,9 @@ public class Device {
 
     public int getStartCh() {
         return this.startChannel;
+    }
+
+    public String getAdditon() {
+        return this.addition;
     }
 }

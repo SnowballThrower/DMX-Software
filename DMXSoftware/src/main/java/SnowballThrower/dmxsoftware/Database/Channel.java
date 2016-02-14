@@ -6,6 +6,7 @@
 package SnowballThrower.dmxsoftware.Database;
 
 import java.util.List;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -26,6 +27,15 @@ public class Channel {
             }
         }
         return value + "";
+    }
+
+    public String getStandardMeaning(int value) {
+        if (meanings != null) {
+            if (meanings.get(0) != null) {
+                return meanings.get(0).getMeaning(value);
+            }
+        }
+        return null;
     }
 
     public Function getFunction() {

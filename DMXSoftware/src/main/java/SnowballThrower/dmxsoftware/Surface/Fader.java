@@ -9,6 +9,10 @@ import SnowballThrower.dmxsoftware.Database.Channel;
 import SnowballThrower.dmxsoftware.Database.Function;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
@@ -29,6 +33,7 @@ public class Fader {
     Group background;
     Group head;
     Group fader;
+    Channel channel;
     int max = 255;
     private String Id;
 
@@ -38,7 +43,8 @@ public class Fader {
         this.height = height;
         this.posX = posX;
         this.posY = posY;
-        frameY = height / 20;
+        this.channel = channel;
+        frameY = height / 10;
         frameX = width / 10;
         background = getBackGround();
         head = getHead();
@@ -51,7 +57,7 @@ public class Fader {
     public void setValue(int value) {
         this.value = value;
         head.setTranslateY(-((height - 2 * frameY) / max) * value);
-        System.out.println(value);
+        //System.out.println(value);
     }
 
     double getFrameX() {
@@ -83,38 +89,76 @@ public class Fader {
     }
 
     private Group getHead() {
-        double vert = height * 0.05;
+        double vert = height * 0.1;
         Rectangle rect = new Rectangle(frameX, height - frameY - 0.5 * vert, width - 2 * frameX, vert);
         rect.setFill(Color.GREY);
         return new Group(rect);
     }
 
     private Group getBackGround() {
+        Group backGround = new Group();
         Rectangle rect = new Rectangle(0, 0, width, height);
         rect.setFill(Color.LIGHTGRAY);
         rect.setStroke(Color.BLACK);
+        backGround.getChildren().add(rect);
+
+        Stop[] stops = new Stop[]{new Stop(0, Color.LIGHTGREY), new Stop(1, Color.LIGHTGREY)};
+        boolean gradient = true;
         switch (function) {
             case Red:
-                rect.setFill(Color.RED);
+                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.RED)};
                 break;
             case Green:
-                rect.setFill(Color.LIMEGREEN);
+                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.LIMEGREEN)};
                 break;
             case Blue:
-                rect.setFill(Color.BLUE);
+                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.BLUE)};
                 break;
             case White:
-                rect.setFill(Color.WHITESMOKE);
+                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.WHITESMOKE)};
                 break;
             case Amber:
-                rect.setFill(Color.GOLD);
+                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.GOLD)};
                 break;
             case UV:
-                rect.setFill(Color.BLUEVIOLET);
+                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.BLUEVIOLET)};
+                break;
+            case Dimmer:
+                stops = new Stop[]{new Stop(0, Color.BLACK), new Stop(1, Color.WHITE)};
+                break;
+            default:
+                gradient = false;
+        }
+        if (gradient) {
+            LinearGradient lg1 = new LinearGradient(0, 1, 0, 0, true, CycleMethod.NO_CYCLE, stops);
+            rect.setFill(lg1);
+        }
+        switch (function) {
+            case Macro:
+                for (int i = 0; i < max; i++) {
+                    Rectangle mac = new Rectangle(
+                            0, height - frameY - ((height - 2 * frameY) / max) * i,
+                            width, (height - 2 * frameY) / max + 1);
+
+                    String string = channel.getStandardMeaning(i);
+                    System.out.println(string);
+                    try {
+                        string = string.toUpperCase();
+                        mac.setFill(Paint.valueOf(string));
+                    } catch (Exception ex) {
+                        mac.setFill(Color.LIGHTGRAY);
+                    }
+                    backGround.getChildren().add(mac);
+                }
+                Rectangle bg = new Rectangle(0, 0, width, height);
+                bg.setFill(null);
+                bg.setStroke(Color.BLACK);
+                backGround.getChildren().add(bg);
                 break;
         }
+
         Line line = new Line(width * 0.5, frameY, width * 0.5, height - frameY);
-        return new Group(rect, line);
+        return new Group(backGround, line);
     }
 
     double getWidth() {

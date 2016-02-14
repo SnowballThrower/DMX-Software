@@ -45,10 +45,11 @@ public class FaderListener implements EventHandler<MouseEvent> {
                     && e.getX() <= fader.getPosX() + fader.getWidth() - fader.getFrameX()
                     && e.getY() >= fader.getPosY()
                     && e.getY() <= fader.getPosY() + fader.getHeight()) {
-                fader.setValue(constrain((int) ((fader.getHeight() - fader.getFrameY()
+                int value = constrain((int) ((fader.getHeight() - fader.getFrameY()
                         - e.getY() + fader.getPosY())
-                        * 255 / (fader.getHeight() - 2 * fader.getFrameY()))));
-                manager.handle(fader.getID(), fader.getValue());
+                        * 255 / (fader.getHeight() - 2 * fader.getFrameY())));
+                manager.handle(fader.getID(), value);
+                fader.setValue(value);
             }
         }
     }
