@@ -107,11 +107,11 @@ public class XMLReader {
                     Element channelMasterElement = (Element) channelMasterNode;
                     dev.channelNumber = Integer.parseInt(rem(channelMasterElement.getAttribute("No")));
                     NodeList channelNodeList = channelMasterElement.getElementsByTagName("Channel");
-                    Channel[] channels = new Channel[dev.channelNumber];
+                    TypeChannel[] channels = new TypeChannel[dev.channelNumber];
 
                     for (int countCh = 0; countCh < channelNodeList.getLength(); countCh++) {
 
-                        Channel channel = new Channel();
+                        TypeChannel channel = new TypeChannel();
                         Node channelNode = channelNodeList.item(countCh);
                         //System.out.println("\nCurrent Element: " + channelNode.getNodeName());
 
@@ -192,8 +192,8 @@ public class XMLReader {
 
                 Element conditionElement = (Element) conditionList.item(conditionCount);
 
-                condition.Channel = Integer.parseInt(rem(conditionElement.getAttribute("Channel")));
-                System.out.println("Channel " + condition.Channel);
+                condition.channel = Integer.parseInt(rem(conditionElement.getAttribute("Channel")));
+                System.out.println("Channel " + condition.channel);
 
                 if (conditionElement != null) {
                     NodeList conditionRangeList = conditionElement.getElementsByTagName("range");
@@ -208,12 +208,14 @@ public class XMLReader {
                         System.out.println(range.min + " - " + range.max);
                     }
                 }
+                conditions.add(condition);
 
             }
         }
         return conditions;
     }
-    String rem(String string){
-        return string.replaceAll("\"","");
+
+    String rem(String string) {
+        return string.replaceAll("\"", "");
     }
 }

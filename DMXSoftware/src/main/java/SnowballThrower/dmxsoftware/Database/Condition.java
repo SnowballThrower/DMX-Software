@@ -13,14 +13,14 @@ import java.util.List;
  */
 class Condition {
 
-    int Channel;
+    int channel;
     List<Range> ranges;
     boolean met;
 
     boolean met(int[] values) {
-        if (Channel > 0 && Channel < values.length) {
+        if (channel > 0 && channel <= values.length) {
             for (int count = 0; count < ranges.size(); count++) {
-                if ((values[Channel] >= ranges.get(count).min && values[Channel] <= ranges.get(count).max)) {
+                if ((values[channel - 1] >= ranges.get(count).min && values[channel - 1] <= ranges.get(count).max)) {
                     return true;
                 }
             }

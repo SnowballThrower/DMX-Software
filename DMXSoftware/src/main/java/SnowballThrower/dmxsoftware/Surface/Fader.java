@@ -6,6 +6,8 @@
 package SnowballThrower.dmxsoftware.Surface;
 
 import SnowballThrower.dmxsoftware.Database.Channel;
+import SnowballThrower.dmxsoftware.Database.TypeChannel;
+import SnowballThrower.dmxsoftware.Database.Device;
 import SnowballThrower.dmxsoftware.Database.Function;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -15,6 +17,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -33,22 +36,30 @@ public class Fader {
     Group background;
     Group head;
     Group fader;
+    Text name;
+    Text meaning;
     Channel channel;
     int max = 255;
     private String Id;
+    Device device;
 
-    public Fader(String id, double posX, double posY, double width, double height, Channel channel) {
+    public Fader(String id, double posX, double posY, double width, double height, Channel channel, Device device) {
+        channel.register(this);
         this.function = channel.getFunction();
         this.width = width;
         this.height = height;
         this.posX = posX;
         this.posY = posY;
         this.channel = channel;
+        this.device = device;
         frameY = height / 10;
         frameX = width / 10;
         background = getBackGround();
         head = getHead();
-        fader = new Group(background, head);
+        name = new Text(device.getChannelName(channel.getNumber() - 1));
+        meaning = new Text(device.getMeaning(channel.getNumber() - 1));
+        meaning.setLayoutY(height + 10);
+        fader = new Group(background, head, name, meaning);
         fader.setLayoutX(posX);
         fader.setLayoutY(posY);
         this.Id = id;
@@ -56,8 +67,18 @@ public class Fader {
 
     public void setValue(int value) {
         this.value = value;
+        channel.setValue(value);
         head.setTranslateY(-((height - 2 * frameY) / max) * value);
+        meaning.setText(device.getMeaning(channel.getNumber() - 1));
+        name.setText(device.getChannelName(channel.getNumber() - 1));
         //System.out.println(value);
+    }
+
+    public void act() {
+        this.value = channel.getValue();
+        head.setTranslateY(-((height - 2 * frameY) / max) * value);
+        meaning.setText(device.getMeaning(channel.getNumber() - 1));
+        name.setText(device.getChannelName(channel.getNumber() - 1));
     }
 
     double getFrameX() {
@@ -92,6 +113,7 @@ public class Fader {
         double vert = height * 0.1;
         Rectangle rect = new Rectangle(frameX, height - frameY - 0.5 * vert, width - 2 * frameX, vert);
         rect.setFill(Color.GREY);
+        rect.setStroke(Color.BLACK);
         return new Group(rect);
     }
 
@@ -103,25 +125,26 @@ public class Fader {
         backGround.getChildren().add(rect);
 
         Stop[] stops = new Stop[]{new Stop(0, Color.LIGHTGREY), new Stop(1, Color.LIGHTGREY)};
+        Color colorOut = Color.LIGHTGREY;
         boolean gradient = true;
         switch (function) {
             case Red:
-                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.RED)};
+                stops = new Stop[]{new Stop(0, colorOut), new Stop(1, Color.RED)};
                 break;
             case Green:
-                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.LIMEGREEN)};
+                stops = new Stop[]{new Stop(0, colorOut), new Stop(1, Color.LIMEGREEN)};
                 break;
             case Blue:
-                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.BLUE)};
+                stops = new Stop[]{new Stop(0, colorOut), new Stop(1, Color.BLUE)};
                 break;
             case White:
-                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.WHITESMOKE)};
+                stops = new Stop[]{new Stop(0, colorOut), new Stop(1, Color.WHITESMOKE)};
                 break;
             case Amber:
-                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.GOLD)};
+                stops = new Stop[]{new Stop(0, colorOut), new Stop(1, Color.GOLD)};
                 break;
             case UV:
-                stops = new Stop[]{new Stop(0, Color.WHITE), new Stop(1, Color.BLUEVIOLET)};
+                stops = new Stop[]{new Stop(0, colorOut), new Stop(1, Color.BLUEVIOLET)};
                 break;
             case Dimmer:
                 stops = new Stop[]{new Stop(0, Color.BLACK), new Stop(1, Color.WHITE)};
@@ -140,7 +163,7 @@ public class Fader {
                             0, height - frameY - ((height - 2 * frameY) / max) * i,
                             width, (height - 2 * frameY) / max + 1);
 
-                    String string = channel.getStandardMeaning(i);
+                    String string = channel.getchType().getStandardMeaning(i);
                     System.out.println(string);
                     try {
                         string = string.toUpperCase();

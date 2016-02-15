@@ -17,11 +17,17 @@ public class DeviceType {
     int power;
     String picturePath;
     int channelNumber;
-    Channel[] channels;
+    TypeChannel[] channels;
 
     public String getMeaning(int channel, int[] values) {
+        if (channels == null) {
+            return null;
+        }
         if (channels[channel] == null) {
             return null;
+        }
+        if (values == null) {
+            return "values null";
         }
         return channels[channel].getMeaning(values[channel], values);
     }
@@ -45,7 +51,7 @@ public class DeviceType {
     public String getChannelNames() {
         String string = "";
         if (channels != null) {
-            for (Channel channel : channels) {
+            for (TypeChannel channel : channels) {
                 if (channel != null) {
                     string = string + "  " + channel.name + " " + channel.function;
                 }
@@ -56,18 +62,18 @@ public class DeviceType {
         return string;
     }
 
-    public String getChannelName(int x) {
+    public String getChannelName(int x, int[] values) {
         if (channels != null) {
             if (x < channelNumber) {
                 if (channels[x] != null) {
-                    return channels[x].name;
+                    return channels[x].getName(values);
                 }
             }
         }
         return "no Channel";
     }
 
-    public Channel[] getChannels() {
+    public TypeChannel[] getChannels() {
         return channels;
     }
 

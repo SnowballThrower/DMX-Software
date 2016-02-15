@@ -41,6 +41,10 @@ public class Manage {
         }
     }
 
+    public void handle(int channel, int value) {
+        send(channel - 1, value);
+    }
+
     public void startMidi() {
         try {
             mc.start();

@@ -5,41 +5,61 @@
  */
 package SnowballThrower.dmxsoftware.Database;
 
+import SnowballThrower.dmxsoftware.Surface.Fader;
+import java.util.LinkedList;
 import java.util.List;
-import javafx.scene.text.Text;
 
 /**
  *
  * @author Sven
  */
-public class Channel {
+public abstract class Channel {
 
-    String name;
     int number;
-    Function function;
-    List<Meaning> meanings;
+    int value;
+    TypeChannel typeCh;
+    private final Function function;
+    List<Fader> faders;
+    List<Channel> channels;
 
-    String getMeaning(int value, int[] values) {
-        int i;
-        for (i = 0; i < meanings.size(); i++) {
-            if (meanings.get(i).met(values)) {
-                return meanings.get(i).getMeaning(value);
-            }
+    public void setValue(int value) {
+        this.value = value;
+        for (Fader fader : faders) {
+            fader.act();
         }
-        return value + "";
     }
 
-    public String getStandardMeaning(int value) {
-        if (meanings != null) {
-            if (meanings.get(0) != null) {
-                return meanings.get(0).getMeaning(value);
-            }
+    public void act() {
+        for (Fader fader : faders) {
+            fader.act();
         }
-        return null;
+    }
+
+    public int getValue() {
+        return this.value;
+    }
+
+    public TypeChannel getchType() {
+        return typeCh;
     }
 
     public Function getFunction() {
         return function;
     }
 
+    public Channel(TypeChannel ch) {
+        faders = new LinkedList<Fader>();
+        value = 0;
+        typeCh = ch;
+        function = ch.getFunction();
+        number = 0;
+    }
+
+    public int getNumber() {
+        return this.number;
+    }
+
+    public void register(Fader aThis) {
+        faders.add(aThis);
+    }
 }

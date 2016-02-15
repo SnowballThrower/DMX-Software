@@ -33,8 +33,8 @@ public class HelloWorldMain extends Application {
             public void handle(ActionEvent event) {
                 System.out.println("Hello World!");
                 mng.startMidi();
-                Devices devices = new Devices();
-                ControlSurface cs = new ControlSurface(mng, devices.getDevices());
+                Devices devices = new Devices(mng);
+                ControlSurface cs = new ControlSurface(mng, devices.getDevices(),devices.getChannels());
             }
         });
 

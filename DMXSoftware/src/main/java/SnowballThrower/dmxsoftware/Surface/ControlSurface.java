@@ -6,12 +6,18 @@
 package SnowballThrower.dmxsoftware.Surface;
 
 import SnowballThrower.dmxsoftware.Database.Channel;
+import SnowballThrower.dmxsoftware.Database.Channels;
+import SnowballThrower.dmxsoftware.Database.DMXChannel;
+import SnowballThrower.dmxsoftware.Database.TypeChannel;
 import SnowballThrower.dmxsoftware.Database.Device;
+import SnowballThrower.dmxsoftware.Database.Function;
+import SnowballThrower.dmxsoftware.Database.Type;
 import SnowballThrower.dmxsoftware.Processing.Manage;
 import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -35,6 +41,7 @@ import javafx.stage.Stage;
 public class ControlSurface extends Application {
 
     ScrollPane bars;
+    ScrollPane dmx;
     Scene faders;
     Scene pultRouting;
     Scene groups;
@@ -47,12 +54,18 @@ public class ControlSurface extends Application {
     double windowHeight;
     double windowWidth;
     Manage manager;
+    Channels dmxChannels;
+    double sizeX = 70;
+    double sizeY = 200;
+    double distY = 50;
 
-    public ControlSurface(Manage mng, List<Device> devices) {
+    public ControlSurface(Manage mng, List<Device> devices, Channels channels) {
         manager = mng;
+        dmxChannels = channels;
         this.devices = devices;
         stack = new StackPane();
         stage = new Stage();
+        dmx = dmxChannels();
         deviceScene = allDevs();
         bars = bars();
         Button btn1 = new Button("Geräte");
@@ -85,6 +98,16 @@ public class ControlSurface extends Application {
             }
         });
 
+        btn3.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                stack.getChildren().clear();
+                stack.getChildren().add(dmx);
+                stack.setAlignment(Pos.BOTTOM_CENTER);
+            }
+        });
+
         faders = new Scene(scenePane, 1000, 800);
         stage.setScene(faders);
         stage.setTitle("Control Surface");
@@ -95,15 +118,12 @@ public class ControlSurface extends Application {
     ScrollPane allDevs() {
 
         int dev = 0;
-        double sizeX = 70;
-        double sizeY = 200;
-        double distY = 50;
         ScrollPane pane = new ScrollPane();
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
         Group deviceGroup = new Group();
         for (Device device : devices) {
-            Group fG = faderGroup(sizeX, sizeY, device);
+            Group fG = faderGroup(device);
             fG.setLayoutY(0.5 * distY + dev * (sizeY + distY));
 
             dev++;
@@ -133,7 +153,7 @@ public class ControlSurface extends Application {
 
     }
 
-    Group deviceImage(Device device, double sizeX, double sizeY) {
+    Group deviceImage(Device device) {
         Group picture;
         System.out.println(device.getImagePath());
         Rectangle rect = new Rectangle(0, 0, sizeX * 2, sizeY);
@@ -149,7 +169,7 @@ public class ControlSurface extends Application {
         } catch (Exception ex) {
             System.out.println(ex);
         }
-        Font font = new Font(sizeY/12);
+        Font font = new Font(sizeY / 12);
         Text type = new Text(device.getType().getName());
         type.setLayoutY(sizeY / 8 * 6);
         type.setFont(font);
@@ -165,21 +185,73 @@ public class ControlSurface extends Application {
 
     ScrollPane bars() {
         ScrollPane pane = new ScrollPane();
-        pane.setContent(new Rectangle(100, 100));
+        Group bars = new Group();
+        Group red = getBars(Function.Red);
+        red.setLayoutY((sizeY + distY) * 0);
+        bars.getChildren().add(red);
+        Group green = getBars(Function.Green);
+        green.setLayoutY((sizeY + distY) * 1);
+        bars.getChildren().add(green);
+        Group blue = getBars(Function.Blue);
+        blue.setLayoutY((sizeY + distY) * 2);
+        bars.getChildren().add(blue);
+        pane.setContent(bars);
         return pane;
     }
 
-    Group faderGroup(double sizeX, double sizeY, Device device) {
+    ScrollPane dmxChannels() {
+        Group dmx = new Group();
+        ScrollPane pane = new ScrollPane();
+        FaderListener fl = new FaderListener(manager);
+        for (DMXChannel channel : dmxChannels.getAll()) {
+            if (channel != null) {
+                Fader fader = new Fader("" + (channel.getAdress()),
+                        channel.getAdress() * sizeX, 0, sizeX, sizeY, channel, channel.getDevice());
+                fl.addFader(fader);
+                Group fade = fader.getFader();
+                fade.addEventFilter(InputEvent.ANY, (event) -> {
+                    if (event.getEventType().toString().contains("SCROLL")) {
+                        //System.out.println(event.getEventType());
+
+                        event.consume();
+                    }
+                });
+                Text ch = new Text("Ch " + channel.getAdress());
+                //ch.setLayoutX(channel.getAdress() * sizeX);
+                ch.setLayoutY(-10);
+                ch.setFont(new Font(10));
+                fade.getChildren().add(ch);
+                dmx.getChildren().add(fade);
+            } else {
+            }
+        }
+        for (Device device : devices) {
+            Text name = new Text(device.getName());
+            name.setLayoutX(device.getStartCh() * sizeX);
+            name.setLayoutY(-20);
+            name.setFont(new Font(15));
+            dmx.getChildren().add(name);
+        }
+        dmx.setOnMouseClicked(fl);
+        dmx.setOnMousePressed(fl);
+        dmx.setOnMouseDragged(fl);
+        pane.setContent(dmx);
+        pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        return pane;
+    }
+
+    Group faderGroup(Device device) {
 
         FaderListener fl = new FaderListener(manager);
         Group faderGroup = new Group();
-        faderGroup.getChildren().add(deviceImage(device, sizeX, sizeY));
+        faderGroup.getChildren().add(deviceImage(device));
         int ch = 2;
         System.out.println(device.getName());
-        for (Channel channel : device.getType().getChannels()) {
+        for (Channel channel : device.getChannels()) {
             if (channel != null) {
                 Fader fader = new Fader("" + (device.getStartCh() + ch - 2),
-                        ch * sizeX, 0, sizeX, sizeY, channel);
+                        ch * sizeX, 0, sizeX, sizeY, channel, device);
                 fl.addFader(fader);
                 Group fade = fader.getFader();
                 fade.addEventFilter(InputEvent.ANY, (event) -> {
@@ -197,5 +269,33 @@ public class ControlSurface extends Application {
         faderGroup.setOnMousePressed(fl);
         faderGroup.setOnMouseDragged(fl);
         return faderGroup;
+    }
+
+    private Group getBars(Function function) {
+        FaderListener fl = new FaderListener(manager);
+        Group faders = new Group();
+        int i = 0;
+        for (Device device : devices) {
+            if (device.getType().getType() == Type.Bar) {
+                for (DMXChannel channel : device.getChannels()) {
+                    if (channel != null) {
+                        if (channel.getchType().getFunction() == function) {
+                            Fader fader = new Fader("" + (device.getStartCh() + i - 2),
+                                    i * sizeX, 0, sizeX, sizeY, channel, device);
+                            Group fade = fader.getFader();
+                            fl.addFader(fader);
+                            faders.getChildren().add(fade);
+                            i++;
+                        }
+                    }
+                }
+
+            }
+        }
+        faders.setOnMouseClicked(fl);
+        faders.setOnMousePressed(fl);
+        faders.setOnMouseDragged(fl);
+
+        return faders;
     }
 }
