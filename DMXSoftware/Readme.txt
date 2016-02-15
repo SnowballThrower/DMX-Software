@@ -1,0 +1,1 @@
+Pictures-Ordner nach target/classes

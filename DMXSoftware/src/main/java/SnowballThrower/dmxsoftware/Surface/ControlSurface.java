@@ -22,7 +22,10 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
@@ -187,14 +190,18 @@ public class ControlSurface extends Application {
         ScrollPane pane = new ScrollPane();
         Group bars = new Group();
         Group red = getBars(Function.Red);
-        red.setLayoutY((sizeY + distY) * 0);
+        red.setLayoutY((sizeY + distY) * 1);
         bars.getChildren().add(red);
         Group green = getBars(Function.Green);
-        green.setLayoutY((sizeY + distY) * 1);
+        green.setLayoutY((sizeY + distY) * 2);
         bars.getChildren().add(green);
         Group blue = getBars(Function.Blue);
-        blue.setLayoutY((sizeY + distY) * 2);
+        blue.setLayoutY((sizeY + distY) * 3);
         bars.getChildren().add(blue);
+        Group checkBoxes = getCheckBoxes();
+        checkBoxes.setLayoutY(sizeY - 60);
+        bars.getChildren().add(checkBoxes);
+        bars.getChildren().add(new Rectangle(0, sizeY / 2, 0, 0));
         pane.setContent(bars);
         return pane;
     }
@@ -297,5 +304,29 @@ public class ControlSurface extends Application {
         faders.setOnMouseDragged(fl);
 
         return faders;
+    }
+
+    private Group getCheckBoxes() {
+        Group boxes = new Group();
+        for (int i = 0; i < 5; i++) {
+            ToggleGroup group = new ToggleGroup();
+            RadioButton clone = new RadioButton("Kopie");
+            clone.setLayoutY(0);
+            clone.setToggleGroup(group);
+            RadioButton mirror = new RadioButton("Spiegel");
+            mirror.setLayoutY(30);
+            mirror.setToggleGroup(group);
+            RadioButton extend = new RadioButton("Erweitern");
+            extend.setLayoutY(60);
+            extend.setToggleGroup(group);
+            extend.setSelected(true);
+            if (i >= 3) {
+                mirror.setSelected(true);
+            }
+            Group triple = new Group(clone, mirror, extend);
+            triple.setLayoutX(sizeX * Math.pow(2, i));
+            boxes.getChildren().add(triple);
+        }
+        return boxes;
     }
 }

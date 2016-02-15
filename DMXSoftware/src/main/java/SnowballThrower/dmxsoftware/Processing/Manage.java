@@ -52,4 +52,8 @@ public class Manage {
             System.out.println("Error in startMidi");
         }
     }
+    
+    public void barExtend(){
+        
+    }
 }
