@@ -11,6 +11,10 @@ bisher realisiert:
   - DMX out
   - Hard- und Software
 
+- JavaFX Projekt mit:
+  - Fadern in unterschiedlichen Anordnungen zum Steuern des Pultes
+  - Steuerung über MIDI (OneWay).
+
 Repository enthält:
 - Arduino Programm für DMX und Controller (läuft)
 - Touch-Notebook-Steuerung mit Java
