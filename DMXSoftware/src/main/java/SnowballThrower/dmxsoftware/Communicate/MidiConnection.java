@@ -14,6 +14,8 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.ShortMessage;
 import static javax.sound.midi.ShortMessage.CONTROL_CHANGE;
+import static javax.sound.midi.ShortMessage.PITCH_BEND;
+import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
 import javax.sound.midi.Transmitter;
 
 /**
@@ -70,11 +72,14 @@ public class MidiConnection extends Thread {
     public void sendDisp(int line, int col, char ascii) {
         if (line >= 0 && line < 2 && col >= 0 && col < 16) {
             int ch = line * 32 + col * 2 + ascii % 2;
-            int asc = ascii / 2;
+            int asc = ((int)ascii) / 2;
             try {
-                ShortMessage message = new ShortMessage(CONTROL_CHANGE, ch, asc);
+                ShortMessage message = new ShortMessage(PITCH_BEND, 1, ch, asc);
                 try {
                     dmxController.getReceiver().send(message, -1);
+                    System.out.println(ascii+""+(int)ascii);
+                    System.out.println(message.getCommand() + "," + message.getChannel() + ": " + message.getData1() + "-" + message.getData2());
+                    System.out.println(PROGRAM_CHANGE + " " + ch + " " + (int) asc);
                 } catch (MidiUnavailableException ex) {
                     //stop = true;
                     //stop();
@@ -145,7 +150,7 @@ public class MidiConnection extends Thread {
                 send(i, valOld[i]);
             }
             receive();
-        }    
+        }
         try {
             Thread.sleep(SLEEP);
 
@@ -164,8 +169,8 @@ public class MidiConnection extends Thread {
             dmxController.close();
         }
     }
-    
-    void receive(){
-        
+
+    void receive() {
+
     }
 }

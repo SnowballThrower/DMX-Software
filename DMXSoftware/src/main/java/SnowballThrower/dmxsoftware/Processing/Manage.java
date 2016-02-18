@@ -57,7 +57,7 @@ public class Manage {
 
     }
 
-    void setDispText(String line1, String line2) {
+    void setDispText(String line2, String line1) {
         for (int i = 0; i < line1.length(); i++) {
             mc.sendDisp(0, i, line1.charAt(i));
         }
