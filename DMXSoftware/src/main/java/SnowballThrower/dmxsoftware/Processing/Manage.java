@@ -23,8 +23,8 @@ public class Manage {
         mc = new MidiConnection();
     }
 
-    public void send(int channel, int value) {
-        if (channel < 16 * 12 && channel >= 0 && value >= 0 && value < 256) {
+    public void send(int channel, int value) { //channl <16 * 12
+        if (channel < 1024 && channel >= 0 && value >= 0 && value < 256) {
             mc.change(channel, value);
         }
     }
@@ -52,8 +52,18 @@ public class Manage {
             System.out.println("Error in startMidi");
         }
     }
-    
-    public void barExtend(){
-        
+
+    public void barExtend() {
+
+    }
+
+    void setDispText(String line1, String line2) {
+        for (int i = 0; i < line1.length(); i++) {
+            mc.sendDisp(0, i, line1.charAt(i));
+        }
+
+        for (int i = 0; i < line2.length(); i++) {
+            mc.sendDisp(1, i, line2.charAt(i));
+        }
     }
 }

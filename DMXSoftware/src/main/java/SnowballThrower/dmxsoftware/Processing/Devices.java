@@ -36,6 +36,7 @@ public class Devices {
         }
         System.out.println("have merged.");
         channels = new Channels(mng, devices);
+        mng.setDispText("Computer", "Modus");
         //showDevs();
     }
 

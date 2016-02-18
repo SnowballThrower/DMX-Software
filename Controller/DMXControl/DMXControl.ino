@@ -96,6 +96,10 @@ byte midiCh;
 byte midiCC;
 byte midiVal;
 byte noteCC;
+const byte ControlChange = 176;
+const byte Note_On = 0x90;
+const byte Note_Off = 0x80;
+const byte ProgramChange = 0xC0;
 bool recognize;
 
 int fadeOld[8];
@@ -330,7 +334,7 @@ void loop() {
     case 0: simpleLoop(); break;
     case 1:
     case 2: channelLoop(); break;
-    case 3:
+    case 3: remoteLoop(); break;
     default: mode = 0; simpleInit(); break;
   }
   s++;
@@ -388,6 +392,27 @@ void channelLoop() {
 
 }
 
+
+void remoteLoop() {
+
+
+
+  encoder();
+
+  menu();
+
+  delay(dTime);
+  transmitter();
+  buttonRead(s);
+
+  midiActive = true;
+
+  valueReadChange();
+
+  displayAnalog();
+
+}
+
 //****************************************************
 
 void serialEvent() {
@@ -396,22 +421,28 @@ void serialEvent() {
     inByte = Serial.read();
     if (inByte > 127) {
       midicount = 0;
-      if (inByte >= 176) {
+      if (inByte >= ControlChange) {
         if (inByte < 192) {
           noteCC = 0;
-          receivemidi[0] = inByte - 176;
+          receivemidi[0] = inByte - ControlChange;
         }
       }
-      if (inByte >= 0x90) {
+      if (inByte >= Note_On) {
         if (inByte < 0xA0) {
           noteCC = 1;
           receivemidi[0] = inByte - 0x90;
         }
       }
-      if (inByte >= 0x80) {
+      if (inByte >= Note_Off) {
         if (inByte < 0x90) {
           noteCC = 2;
           receivemidi[0] = inByte - 0x80;
+        }
+      }
+      if (inByte >= ProgramChange) {
+        if (inByte < 0xD0) {
+          noteCC = 3;
+          receivemidi[0] = inByte - ProgramChange;
         }
       }
     }
@@ -427,32 +458,36 @@ void serialEvent() {
             targetCh = receivemidi[1] + 128 * midiCh;
             values[targetCh] = 2 * receivemidi[2];
           } else {
-            if (receivemidi[0] < 3) {
-              if (receivemidi[1] >= lowNotes[midiCh]) {
-                barLength = (barEnd - barStart) / 3;
-                if (receivemidi[1] < lowNotes[midiCh] + barLength) {
-                  targetCh = barStart + 3 * receivemidi[1] + midiCh - 3 * lowNotes[midiCh];
+            if (noteCC == 3) {
+              handleProgramChange();
+            } else {
+              if (receivemidi[0] < 3) {
+                if (receivemidi[1] >= lowNotes[midiCh]) {
+                  barLength = (barEnd - barStart) / 3;
+                  if (receivemidi[1] < lowNotes[midiCh] + barLength) {
+                    targetCh = barStart + 3 * receivemidi[1] + midiCh - 3 * lowNotes[midiCh];
 
-                  if (noteCC == 2) {
-                    values[targetCh] = 0;
-                  }
-                  if (noteCC == 1) {
-                    values[targetCh] = 2 * receivemidi[2];
+                    if (noteCC == 2) {
+                      values[targetCh] = 0;
+                    }
+                    if (noteCC == 1) {
+                      values[targetCh] = 2 * receivemidi[2];
+                    }
                   }
                 }
               }
-            }
-            if (midiCh == 3) {
-              barLength = (barEnd - barStart);
-              if (receivemidi[1] >= lowNotes[3]) {
-                if (receivemidi[1] < lowNotes[3] + barLength) {
-                  targetCh = barStart + 3 * receivemidi[1] + receivemidi[1] / segments - lowNotes[3];
+              if (midiCh == 3) {
+                barLength = (barEnd - barStart);
+                if (receivemidi[1] >= lowNotes[3]) {
+                  if (receivemidi[1] < lowNotes[3] + barLength) {
+                    targetCh = barStart + 3 * receivemidi[1] + receivemidi[1] / segments - lowNotes[3];
 
-                  if (noteCC == 2) {
-                    values[targetCh] = 0;
-                  }
-                  if (noteCC == 1) {
-                    values[targetCh] = 2 * receivemidi[2];
+                    if (noteCC == 2) {
+                      values[targetCh] = 0;
+                    }
+                    if (noteCC == 1) {
+                      values[targetCh] = 2 * receivemidi[2];
+                    }
                   }
                 }
               }
@@ -461,6 +496,35 @@ void serialEvent() {
         }
       }
     }
+  }
+}
+
+void midiSend(int val, byte fad) {
+  Serial.write(noteCC + fad);
+  Serial.write(val / 32);
+  Serial.write(val % 32);
+}
+
+void midiButtonSend(bool fs, bool hi, byte num) {
+  if (hi) {
+    Serial.write(Note_On);
+    Serial.write(8 * fs + num);
+  } else {
+    Serial.write(Note_Off);
+    Serial.write(8 * fs + num);
+  }
+}
+
+void handleProgramChange() {
+  if (receivemidi[1] < 64) {
+    bool col = receivemidi[1] < 32;
+    byte line = (receivemidi[1] % 32) / 2;
+    byte val = receivemidi[2] * 2 + receivemidi[1] % 2;
+    lcd.setCursor(line, col);
+    lcd.print(val);
+  }
+  else{
+    
   }
 }
 
@@ -597,6 +661,17 @@ void valueRead() {
     } else {
       values[targetChannel(s)] = conv(analogRead(As[s]));
     }
+  }
+}
+
+void valueReadChange() {
+  fader[s] = analogRead(As[s]);
+  if (fadeOld[s] < fader[s] - diff || fadeOld[s] > fader[s] + diff) {
+
+
+    fadeOld[s] = fader[s];
+
+    midiSend(fader[s], s);
   }
 }
 

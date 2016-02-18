@@ -14,6 +14,7 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.ShortMessage;
 import static javax.sound.midi.ShortMessage.CONTROL_CHANGE;
+import javax.sound.midi.Transmitter;
 
 /**
  *
@@ -60,6 +61,60 @@ public class MidiConnection extends Thread {
         }
     }
 
+    /**
+     *
+     * @param line (line (0-1).
+     * @param col Column(0-15).
+     * @param ascii 8bit.
+     */
+    public void sendDisp(int line, int col, char ascii) {
+        if (line >= 0 && line < 2 && col >= 0 && col < 16) {
+            int ch = line * 32 + col * 2 + ascii % 2;
+            int asc = ascii / 2;
+            try {
+                ShortMessage message = new ShortMessage(CONTROL_CHANGE, ch, asc);
+                try {
+                    dmxController.getReceiver().send(message, -1);
+                } catch (MidiUnavailableException ex) {
+                    //stop = true;
+                    //stop();
+                } catch (NullPointerException np) {
+                    System.out.println("midi=null");
+                }
+            } catch (InvalidMidiDataException ex) {
+                Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param sel selection LED or other.
+     * @param led which (0-7).
+     * @param value (0-255).
+     */
+    public void sendLED(int sel, int led, int value) {
+        if (sel >= 0 && sel < 2 && led >= 0 && led < 8 && value >= 0 && value < 256) {
+            int ch = 64 + sel * 32 + led * 2 + value % 2;
+            int val = value / 2;
+            try {
+                ShortMessage message = new ShortMessage(CONTROL_CHANGE, ch, val);
+                try {
+                    dmxController.getReceiver().send(message, -1);
+                } catch (MidiUnavailableException ex) {
+                    //stop = true;
+                    //stop();
+                } catch (NullPointerException np) {
+                    System.out.println("midi=null");
+                }
+            } catch (InvalidMidiDataException ex) {
+                Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+    }
+
     private void send(int channel, int value) {
         //System.out.println("Midi send: " + channel + " ," + value / 2);
         //System.out.println("Midi send: " + (CONTROL_CHANGE + channel / 128) + " ," + channel % 128 + " ," + value / 2);
@@ -73,9 +128,11 @@ public class MidiConnection extends Thread {
                 //stop();
             } catch (NullPointerException np) {
                 System.out.println("midi=null");
+
             }
         } catch (InvalidMidiDataException ex) {
-            Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MidiConnection.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -87,11 +144,14 @@ public class MidiConnection extends Thread {
                 valOld[i] = valBuff;
                 send(i, valOld[i]);
             }
-        }
+            receive();
+        }    
         try {
             Thread.sleep(SLEEP);
+
         } catch (InterruptedException ex) {
-            Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MidiConnection.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -103,5 +163,9 @@ public class MidiConnection extends Thread {
         if (dmxController != null) {
             dmxController.close();
         }
+    }
+    
+    void receive(){
+        
     }
 }

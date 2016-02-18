@@ -49,4 +49,10 @@
 		<Name>"BAR 4"</Name>
 		<Additional>"Kuhstall Haus-Seite Mistfall"</Additional>
 	</Device>
+
+	<Device Id="11" Channel="513">
+		<Type Id="7"></Type>
+		<Name>"Display"</Name>
+		<Additional>"Controller"</Additional>
+	</Device>
 </Devices>

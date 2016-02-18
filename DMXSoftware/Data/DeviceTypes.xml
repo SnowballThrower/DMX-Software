@@ -522,4 +522,56 @@
 		</Channels>
 	</Device>
 	
+	<Device Id="7">
+		<Name>"Display"</Name>
+		<Type>"Disp"</Type>
+		<Power>"120"</Power>
+		<Symbol>"Picture"</Symbol>
+		
+		<Channels No="7">
+		
+			
+			<Channel Nr="4" F="Dimmer">
+				<ChName>"Dimmer"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			
+			<Channel Nr="1" F="Red">
+				<ChName>"Red"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			
+			<Channel Nr="2" F="Green">
+				<ChName>"Green"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			
+			<Channel Nr="3" F="Blue">
+				<ChName>"Blue"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+			
+			<Channel Nr="5" F="White">
+				<ChName>"Contrast"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+		</Channels>
+	</Device>
+	
+	
 </ExampleDevices>
