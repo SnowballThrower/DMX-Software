@@ -100,6 +100,7 @@ const byte ControlChange = 176;
 const byte Note_On = 0x90;
 const byte Note_Off = 0x80;
 const byte ProgramChange = 0xC0;
+const byte PITCH_BEND = 0xE0;
 bool recognize;
 
 int fadeOld[8];
@@ -351,7 +352,7 @@ void changeMode() {
     case 2: for (p = 0; p < 8; p++) {
         printChannelName(p);
       } break;
-    case 3:
+    case 3: lcd.clear(); lcd.print("Remote"); break;
     default: break;
   }
 }
@@ -399,7 +400,7 @@ void remoteLoop() {
 
   encoder();
 
-  menu();
+  
 
   delay(dTime);
   transmitter();
@@ -439,8 +440,8 @@ void serialEvent() {
           receivemidi[0] = inByte - 0x80;
         }
       }
-      if (inByte >= ProgramChange) {
-        if (inByte < 0xD0) {
+      if (inByte >= PITCH_BEND) {
+        if (inByte < 0xF0) {
           noteCC = 3;
           receivemidi[0] = inByte - ProgramChange;
         }
@@ -459,7 +460,7 @@ void serialEvent() {
             values[targetCh] = 2 * receivemidi[2];
           } else {
             if (noteCC == 3) {
-              handleProgramChange();
+              handleProgramChange(receivemidi[1],receivemidi[2]);
             } else {
               if (receivemidi[0] < 3) {
                 if (receivemidi[1] >= lowNotes[midiCh]) {
@@ -515,13 +516,13 @@ void midiButtonSend(bool fs, bool hi, byte num) {
   }
 }
 
-void handleProgramChange() {
-  if (receivemidi[1] < 64) {
-    bool col = receivemidi[1] < 32;
-    byte line = (receivemidi[1] % 32) / 2;
-    byte val = receivemidi[2] * 2 + receivemidi[1] % 2;
+void handleProgramChange(byte r1, byte r2) {
+  if (true){//r1 < 64) {
+    bool col = r1 < 32;
+    byte line = (r1 % 32) / 2;
+    byte val = r2 * 2 + r1 % 2;
     lcd.setCursor(line, col);
-    lcd.print(val);
+    lcd.print((char)val);
   }
   else{
     
