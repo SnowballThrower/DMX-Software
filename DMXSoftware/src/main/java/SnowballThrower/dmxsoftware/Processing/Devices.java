@@ -36,7 +36,8 @@ public class Devices {
         }
         System.out.println("have merged.");
         channels = new Channels(mng, devices);
-        mng.setDispText("Computer", "Modus");
+        mng.setDispText("Ferngesteuerter", "Modus mit Java");
+        System.out.println("Send Text");
         //showDevs();
     }
 
