@@ -28,7 +28,7 @@ public class MidiHandler implements Receiver {
     @Override
     public void send(MidiMessage message, long timeStamp) {
         System.out.println("got message");
-        //handle((ShortMessage) message);
+        handle((ShortMessage) message);
     }
 
     @Override
@@ -40,6 +40,7 @@ public class MidiHandler implements Receiver {
         if (message.getCommand() == CONTROL_CHANGE) {
             int fader = message.getChannel();
             int value = message.getData2() + message.getData1() * 32;
+            System.out.println("CC " + fader + " " + value);
             manager.handleMidiFader(fader, value);
         }
         if (message.getCommand() == NOTE_ON) {

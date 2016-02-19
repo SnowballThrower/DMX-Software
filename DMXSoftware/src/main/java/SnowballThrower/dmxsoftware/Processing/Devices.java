@@ -22,6 +22,7 @@ public class Devices {
     Channels channels;
 
     public Devices(Manage mng) {
+        mng.setDevs(this);
         XMLReader xml = new XMLReader();
         types = xml.getTypes();
         devices = xml.getDevices();

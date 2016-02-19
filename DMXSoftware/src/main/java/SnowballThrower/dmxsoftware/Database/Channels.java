@@ -28,7 +28,7 @@ public class Channels {
             for (DMXChannel channel : device.getChannels()) {
                 if (channel != null) {
                     channel.addManager(manager);
-                    channels[channel.adress] = channel;
+                    channels[channel.getAdress()] = channel;
                 }
             }
         }
@@ -36,5 +36,13 @@ public class Channels {
 
     public DMXChannel[] getAll() {
         return channels;
+    }
+
+    public DMXChannel get(int index) {
+        try {
+            return channels[index];
+        } catch (Exception ex) {
+            return null;
+        }
     }
 }

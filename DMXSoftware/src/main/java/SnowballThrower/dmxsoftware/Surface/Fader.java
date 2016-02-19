@@ -76,7 +76,11 @@ public class Fader {
 
     public void act() {
         this.value = channel.getValue();
-        head.setTranslateY(-((height - 2 * frameY) / max) * value);
+        try {
+            head.setTranslateY(-((height - 2 * frameY) / max) * value);
+        } catch (Exception ex) {
+
+        }
         meaning.setText(device.getMeaning(channel.getNumber() - 1));
         name.setText(device.getChannelName(channel.getNumber() - 1));
     }

@@ -29,7 +29,7 @@ public class toggleHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent t) {
-        cs.toggle(func, i);
+        //cs.toggle(func, i);
     }
     
 }

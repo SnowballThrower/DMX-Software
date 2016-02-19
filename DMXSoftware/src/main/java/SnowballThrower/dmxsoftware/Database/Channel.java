@@ -8,6 +8,7 @@ package SnowballThrower.dmxsoftware.Database;
 import SnowballThrower.dmxsoftware.Surface.Fader;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.application.Platform;
 
 /**
  *
@@ -31,7 +32,11 @@ public abstract class Channel {
 
     public void act() {
         for (Fader fader : faders) {
-            fader.act();
+            try {
+                fader.act();
+            } catch (Exception e) {
+                System.out.println("Fehler bei fader aktualisieren.");
+            }
         }
     }
 
