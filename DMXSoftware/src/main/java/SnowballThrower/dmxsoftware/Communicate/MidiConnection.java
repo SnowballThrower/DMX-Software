@@ -5,6 +5,9 @@
  */
 package SnowballThrower.dmxsoftware.Communicate;
 
+import SnowballThrower.dmxsoftware.Processing.Manage;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.InvalidMidiDataException;
@@ -12,6 +15,7 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 import static javax.sound.midi.ShortMessage.CONTROL_CHANGE;
 import static javax.sound.midi.ShortMessage.PITCH_BEND;
@@ -26,35 +30,80 @@ public class MidiConnection extends Thread {
 
     static final int MAX_CH = 1000;
     MidiDevice dmxController;
+    List<MidiDevice> midis;
     private int[] valOld;
     int[] valNew;
     boolean stop;
     private long SLEEP = 2;
+    Receiver midiOut;
+    Transmitter midiIn;
+    private Receiver midiHandler;
 
-    public MidiConnection() {
+    public MidiConnection(Manage mng) {
+        midis = new LinkedList<MidiDevice>();
         stop = false;
         valOld = new int[MAX_CH];
         valNew = new int[MAX_CH];
         Info[] infos = MidiSystem.getMidiDeviceInfo();
-        for (int i = 0; i < infos.length; i++) {
+        midiHandler = new MidiHandler(mng);
+        int i;
+        for (i = 0; i < infos.length; i++) {
             System.out.println(infos[i].getName());
             if (infos[i].getName().contains("Cable")) {
                 try {
-                    dmxController = MidiSystem.getMidiDevice(infos[i]);
+                    MidiDevice dmxController = MidiSystem.getMidiDevice(infos[i]);
+                    midis.add(dmxController);
+                    if (dmxController != null) {
+                        try {
+                            dmxController.open();
+                        } catch (Exception e) {
+
+                        }
+                        if (midiOut == null) {
+                            try {
+                                midiOut = dmxController.getReceiver();
+                                System.out.println("got receiver");
+                            } catch (MidiUnavailableException ex) {
+                                //Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        if (true) {//midiIn == null) {
+                            try {
+                                List<Transmitter> transmitters = dmxController.getTransmitters();
+                                for (Transmitter transmitter : transmitters) {
+                                    transmitter.setReceiver(new MidiHandler(mng));
+                                }
+                                Transmitter midiIn = dmxController.getTransmitter();
+                                System.out.println("got transmitter");
+                                midiIn.setReceiver(new MidiHandler(mng));
+                            } catch (MidiUnavailableException ex) {
+                                //Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+
+                        try {
+                            dmxController.open();
+                            midiIn.setReceiver(midiHandler);
+                        } catch (Exception e) {
+
+                        }
+                    }
                 } catch (MidiUnavailableException ex) {
                     Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
-        if (dmxController != null) {
-            if (!dmxController.isOpen()) {
-                try {
-                    dmxController.open();
-                } catch (MidiUnavailableException ex) {
-                    Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        if (midiIn == null) {
+            System.out.println("midi In = null");
+        } else {
+            System.out.println("midi In check");
         }
+        if (midiOut == null) {
+            System.out.println("midi Out = null");
+        } else {
+            System.out.println("midi Out check");
+        }
+
     }
 
     public void change(int channel, int value) {
@@ -72,17 +121,14 @@ public class MidiConnection extends Thread {
     public void sendDisp(int line, int col, char ascii) {
         if (line >= 0 && line < 2 && col >= 0 && col < 16) {
             int ch = line * 32 + col * 2 + ascii % 2;
-            int asc = ((int)ascii) / 2;
+            int asc = ((int) ascii) / 2;
             try {
                 ShortMessage message = new ShortMessage(PITCH_BEND, 1, ch, asc);
                 try {
-                    dmxController.getReceiver().send(message, -1);
-                    System.out.println(ascii+""+(int)ascii);
-                    System.out.println(message.getCommand() + "," + message.getChannel() + ": " + message.getData1() + "-" + message.getData2());
-                    System.out.println(PROGRAM_CHANGE + " " + ch + " " + (int) asc);
-                } catch (MidiUnavailableException ex) {
-                    //stop = true;
-                    //stop();
+                    midiOut.send(message, -1);
+                    //System.out.println(ascii + "" + (int) ascii);
+                    //System.out.println(message.getCommand() + "," + message.getChannel() + ": " + message.getData1() + "-" + message.getData2());
+                    //System.out.println(PROGRAM_CHANGE + " " + ch + " " + (int) asc);
                 } catch (NullPointerException np) {
                     System.out.println("midi=null");
                 }
@@ -105,10 +151,7 @@ public class MidiConnection extends Thread {
             try {
                 ShortMessage message = new ShortMessage(CONTROL_CHANGE, ch, val);
                 try {
-                    dmxController.getReceiver().send(message, -1);
-                } catch (MidiUnavailableException ex) {
-                    //stop = true;
-                    //stop();
+                    midiOut.send(message, -1);
                 } catch (NullPointerException np) {
                     System.out.println("midi=null");
                 }
@@ -126,11 +169,7 @@ public class MidiConnection extends Thread {
         try {
             ShortMessage message = new ShortMessage(CONTROL_CHANGE, channel / 128, channel % 128, value / 2);
             try {
-                dmxController.getReceiver().send(message, -1);
-            } catch (MidiUnavailableException ex) {
-                System.out.println("No Midi " + channel + " ," + value);
-                //stop = true;
-                //stop();
+                midiOut.send(message, -1);
             } catch (NullPointerException np) {
                 System.out.println("midi=null");
 

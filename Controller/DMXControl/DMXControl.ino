@@ -501,7 +501,7 @@ void serialEvent() {
 }
 
 void midiSend(int val, byte fad) {
-  Serial.write(noteCC + fad);
+  Serial.write(ControlChange + fad);
   Serial.write(val / 32);
   Serial.write(val % 32);
 }

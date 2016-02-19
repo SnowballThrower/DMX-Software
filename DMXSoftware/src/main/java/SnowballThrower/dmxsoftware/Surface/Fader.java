@@ -164,7 +164,7 @@ public class Fader {
                             width, (height - 2 * frameY) / max + 1);
 
                     String string = channel.getchType().getStandardMeaning(i);
-                    System.out.println(string);
+                    //System.out.println(string);
                     try {
                         string = string.toUpperCase();
                         mac.setFill(Paint.valueOf(string));
