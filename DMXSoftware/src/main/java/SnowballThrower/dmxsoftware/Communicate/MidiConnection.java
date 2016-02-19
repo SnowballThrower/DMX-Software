@@ -146,10 +146,10 @@ public class MidiConnection extends Thread {
      */
     public void sendLED(int sel, int led, int value) {
         if (sel >= 0 && sel < 2 && led >= 0 && led < 8 && value >= 0 && value < 256) {
-            int ch = 64 + sel * 32 + led * 2 + value % 2;
+            int ch = 64 + led * 2 + value % 2;
             int val = value / 2;
             try {
-                ShortMessage message = new ShortMessage(CONTROL_CHANGE, ch, val);
+                ShortMessage message = new ShortMessage(PITCH_BEND, ch, val);
                 try {
                     midiOut.send(message, -1);
                 } catch (NullPointerException np) {

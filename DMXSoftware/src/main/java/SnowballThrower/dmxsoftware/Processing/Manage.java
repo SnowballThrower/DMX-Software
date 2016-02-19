@@ -12,6 +12,7 @@ import SnowballThrower.dmxsoftware.Database.DMXChannel;
 import SnowballThrower.dmxsoftware.Surface.ControlSurface;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.application.Platform;
 
 /**
  *
@@ -78,41 +79,36 @@ public class Manage {
     public void handleMidiFader(int fader, int value) {
         try {
 
-            devs.getChannels().get(faderChannel + fader + 1).setValue(value / 4);
+            devs.getChannels().get(faderChannel + fader).setValue(value / 4);
         } catch (IndexOutOfBoundsException | NullPointerException ex) {
             System.out.println("nö");
         }
     }
 
     public void handleMidiAction(int data1, boolean b) {
-        if (data1 == 17) {
-            faderChannel--;
-            if (faderChannel < 0) {
-                faderChannel = 511;
-            }
-            System.out.println("turned left");
-            for (ControlSurface cs : views) {
-                try {
-                    cs.setRemFader(faderChannel);
-                } catch (Exception ex) {
-
+        if (data1 == 17 || data1 == 16) {
+            if (data1 == 16) {
+                faderChannel++;
+                if (faderChannel > 512) {
+                    faderChannel = 0;
+                }
+            } else {
+                faderChannel--;
+                if (faderChannel < 0) {
+                    faderChannel = 511;
                 }
             }
-        }
-        if (data1 == 16) {
-            faderChannel++;
-            if (faderChannel > 512) {
-                faderChannel = 0;
-            }
-            System.out.println("turned right");
-            for (ControlSurface cs : views) {
-                try {
-                    cs.setRemFader(faderChannel);
-                } catch (Exception ex) {
+            System.out.println("turned");
+            Platform.runLater(new Runnable() {
 
+                @Override
+                public void run() {
+                    actHighLight();
                 }
-            }
+            });
+
         }
+
         if (b) {
             System.out.println("Pressed Button " + data1);
         } else {
@@ -126,10 +122,40 @@ public class Manage {
 
     public void register(ControlSurface aThis) {
         this.views.add(aThis);
+        if (views.size() < 2) {
+            setTargetChannel(0);
+        }
         try {
             aThis.setRemFader(faderChannel);
         } catch (Exception ex) {
 
+        }
+    }
+
+    public void setTargetChannel(int startCh) {
+        if (startCh > 0 && startCh < 550) {
+            faderChannel = startCh;
+
+            actHighLight();
+
+        }
+    }
+
+    private void actHighLight() {
+        for (Channel ch : devs.getChannels().getAll()) {
+            try {
+                ch.setHighlighted(false);
+            } catch (Exception e) {
+
+            }
+        }
+        for (int i = 0; i < 8; i++) {
+            try {
+                devs.getChannels().get(i + faderChannel).setHighlighted(true);
+                mc.sendLED(1, i, 255);
+            } catch (Exception e) {
+                mc.sendLED(1, i, 0);
+            }
         }
     }
 }

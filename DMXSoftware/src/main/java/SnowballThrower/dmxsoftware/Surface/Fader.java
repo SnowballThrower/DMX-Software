@@ -17,6 +17,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
 /**
@@ -42,6 +43,7 @@ public class Fader {
     int max = 255;
     private String Id;
     Device device;
+    Rectangle high;
 
     public Fader(String id, double posX, double posY, double width, double height, Channel channel, Device device) {
         channel.register(this);
@@ -62,6 +64,7 @@ public class Fader {
         fader = new Group(background, head, name, meaning);
         fader.setLayoutX(posX);
         fader.setLayoutY(posY);
+        makeFrame();
         this.Id = id;
         act();
     }
@@ -203,5 +206,21 @@ public class Fader {
 
     String getID() {
         return Id;
+    }
+
+    public void highlight(boolean sel) {
+        if (sel) {
+            fader.getChildren().add(high);
+        } else {
+            fader.getChildren().remove(high);
+        }
+    }
+
+    private void makeFrame() {
+        high = new Rectangle(0, 0, width, height);
+        high.setFill(Color.TRANSPARENT);
+        high.setStroke(Color.BLACK);
+        high.setStrokeType(StrokeType.INSIDE);
+        high.setStrokeWidth(frameX);
     }
 }

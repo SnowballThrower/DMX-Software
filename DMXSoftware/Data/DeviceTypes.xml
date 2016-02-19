@@ -526,7 +526,7 @@
 		<Name>"Display"</Name>
 		<Type>"Disp"</Type>
 		<Power>"120"</Power>
-		<Symbol>"Picture"</Symbol>
+		<Symbol>"/Pictures/DSC_1100.jpg"</Symbol>
 		
 		<Channels No="7">
 		

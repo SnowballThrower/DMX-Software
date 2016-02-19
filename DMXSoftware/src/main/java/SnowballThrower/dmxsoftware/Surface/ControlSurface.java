@@ -61,7 +61,6 @@ public class ControlSurface extends Application {
     double sizeX = 70;
     double sizeY = 200;
     double distY = 50;
-    Rectangle selection;
 
     public ControlSurface(Manage mng, List<Device> devices, Channels channels) {
         manager = mng;
@@ -185,6 +184,7 @@ public class ControlSurface extends Application {
         place.setLayoutY(sizeY);
         place.setFont(font);
         Group texts = new Group(picture, name, place, type);
+        picture.setOnMouseClicked(new DevClickListener(manager, device.getStartCh()));
         return new Group(picture, texts);
     }
 
@@ -241,11 +241,6 @@ public class ControlSurface extends Application {
             name.setFont(new Font(15));
             dmx.getChildren().add(name);
         }
-        selection = new Rectangle(sizeX, 0, 8 * sizeX, sizeY);
-        selection.setFill(Color.TRANSPARENT);
-        selection.setStroke(Color.BLUE);
-        selection.setStrokeWidth(2);
-        dmx.getChildren().add(selection);
         dmx.setOnMouseClicked(fl);
         dmx.setOnMousePressed(fl);
         dmx.setOnMouseDragged(fl);
@@ -339,7 +334,7 @@ public class ControlSurface extends Application {
 
     public void setRemFader(int ch) {
         try {
-            selection.setTranslateX(ch * sizeX);
+            //selection.setTranslateX(ch * sizeX);
             dmx.setHvalue(((double) ch) / 512 * (dmx.getHmax() - dmx.getHmin()));
         } catch (Exception ex) {
 

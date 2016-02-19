@@ -69,4 +69,9 @@ public abstract class Channel {
     public void register(Fader aThis) {
         faders.add(aThis);
     }
+    public void setHighlighted(boolean high){
+        for(Fader fader : faders){
+            fader.highlight(high);
+        }
+    }
 }

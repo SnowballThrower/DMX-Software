@@ -108,6 +108,7 @@ int fader[8];
 bool fix[8];
 int ofs[8];
 bool active[8];
+byte led[8];
 
 int ChD1 = 7;
 int ChD2 = 10;
@@ -152,7 +153,7 @@ int diff = 6;
 int Min = 10;
 int Max = 1018;
 double dTime = 0; //0.1
-double rTime = 2.0;
+double rTime = 1.0;
 int transSteps = 32;
 //*********************
 //counters
@@ -331,12 +332,14 @@ void setup() {
 
 void loop() {
   select(s);
-  digitalWrite(sLED, active[s]);
+  if (mode != 3) {
+    digitalWrite(sLED, active[s]);
+  }
   switch (mode) {
     case 0: simpleLoop(); break;
     case 1:
     case 2: channelLoop(); break;
-    case 3: remoteLoop(); break;
+    case 3: analogWrite(sLED, led[s]); remoteLoop(); break;
     default: mode = 0; simpleInit(); break;
   }
   s++;
@@ -397,14 +400,12 @@ void channelLoop() {
 
 void remoteLoop() {
 
-
-
   encoder();
 
-
+  transmitter();
 
   delay(rTime);
-  transmitter();
+  Serial1.flush();
   buttonRead(s);
 
   midiActive = true;
@@ -444,7 +445,7 @@ void serialEvent() {
       if (inByte >= PITCH_BEND) {
         if (inByte < 0xF0) {
           noteCC = 3;
-          receivemidi[0] = inByte - ProgramChange;
+          receivemidi[0] = inByte - PITCH_BEND;
         }
       }
     }
@@ -461,7 +462,7 @@ void serialEvent() {
             values[targetCh] = 2 * receivemidi[2];
           } else {
             if (noteCC == 3) {
-              handleProgramChange(receivemidi[1], receivemidi[2]);
+              handlePitch(receivemidi[1], receivemidi[2]);
             } else {
               if (receivemidi[0] < 3) {
                 if (receivemidi[1] >= lowNotes[midiCh]) {
@@ -518,16 +519,18 @@ void midiButtonSend(bool fs, bool hi, byte num) {
   Serial.write(0);
 }
 
-void handleProgramChange(byte r1, byte r2) {
-  if (true) { //r1 < 64) {
-    bool col = r1 < 32;
-    byte line = (r1 % 32) / 2;
-    byte val = r2 * 2 + r1 % 2;
-    lcd.setCursor(line, col);
+void handlePitch(byte r1, byte r2) {
+  bool line = r1 < 32;
+  byte col = (r1 % 32) / 2;
+  byte val = r2 * 2 + r1 % 2;
+  if (r1 < 64) {
+    lcd.setCursor(col, line);
     lcd.print((char)val);
   }
   else {
-
+    if (col < 8) {
+      led[col] = val;
+    }
   }
 }
 
@@ -543,6 +546,12 @@ void buttonRead(int s) {
   } else {
     pushp = pbp;
   }
+
+  if (mode == 3) {
+    if (!pbs[s] && pushs[s]) {
+      midiButtonSend(false, false, s);
+    }
+  }
   if (pbs[s] && !pushs[s]) {
     pushs[s] = true;
     if (mode == 3) {
@@ -550,6 +559,11 @@ void buttonRead(int s) {
     }
   } else {
     pushs[s] = pbs[s];
+  }
+  if (mode == 3) {
+    if (!pbf[s] && pushf[s]) {
+      midiButtonSend(true, false, s);
+    }
   }
   if (pbf[s] && !pushf[s]) {
     pushf[s] = true;
@@ -560,6 +574,7 @@ void buttonRead(int s) {
   } else {
     pushf[s] = pbf[s];
   }
+
 }
 void transmitter() {
   Serial1.flush();
