@@ -24,9 +24,11 @@ public abstract class Channel {
     List<Channel> channels;
 
     public void setValue(int value) {
-        this.value = value;
-        for (Fader fader : faders) {
-            fader.act();
+        if (value >= 0 && value < 256) {
+            this.value = value;
+            for (Fader fader : faders) {
+                fader.act();
+            }
         }
     }
 

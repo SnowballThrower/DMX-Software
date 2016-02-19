@@ -10,6 +10,8 @@ import SnowballThrower.dmxsoftware.Communicate.SerialConnection;
 import SnowballThrower.dmxsoftware.Database.Channel;
 import SnowballThrower.dmxsoftware.Database.DMXChannel;
 import SnowballThrower.dmxsoftware.Surface.ControlSurface;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -21,9 +23,12 @@ public class Manage {
     MidiConnection mc;
     SerialConnection sc;
     Devices devs;
+    int faderChannel = 0;
+    private List<ControlSurface> views;
 
     public Manage() {
         mc = new MidiConnection(this);
+        views = new LinkedList<ControlSurface>();
     }
 
     public void send(int channel, int value) { //channl <16 * 12
@@ -73,13 +78,41 @@ public class Manage {
     public void handleMidiFader(int fader, int value) {
         try {
 
-            devs.getChannels().get(fader+1).setValue(value / 4);
+            devs.getChannels().get(faderChannel + fader + 1).setValue(value / 4);
         } catch (IndexOutOfBoundsException | NullPointerException ex) {
             System.out.println("nö");
         }
     }
 
     public void handleMidiAction(int data1, boolean b) {
+        if (data1 == 17) {
+            faderChannel--;
+            if (faderChannel < 0) {
+                faderChannel = 511;
+            }
+            System.out.println("turned left");
+            for (ControlSurface cs : views) {
+                try {
+                    cs.setRemFader(faderChannel);
+                } catch (Exception ex) {
+
+                }
+            }
+        }
+        if (data1 == 16) {
+            faderChannel++;
+            if (faderChannel > 512) {
+                faderChannel = 0;
+            }
+            System.out.println("turned right");
+            for (ControlSurface cs : views) {
+                try {
+                    cs.setRemFader(faderChannel);
+                } catch (Exception ex) {
+
+                }
+            }
+        }
         if (b) {
             System.out.println("Pressed Button " + data1);
         } else {
@@ -89,5 +122,14 @@ public class Manage {
 
     void setDevs(Devices aThis) {
         devs = aThis;
+    }
+
+    public void register(ControlSurface aThis) {
+        this.views.add(aThis);
+        try {
+            aThis.setRemFader(faderChannel);
+        } catch (Exception ex) {
+
+        }
     }
 }

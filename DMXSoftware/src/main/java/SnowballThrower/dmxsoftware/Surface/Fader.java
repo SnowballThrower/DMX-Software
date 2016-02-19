@@ -63,19 +63,24 @@ public class Fader {
         fader.setLayoutX(posX);
         fader.setLayoutY(posY);
         this.Id = id;
+        act();
     }
 
     public void setValue(int value) {
-        this.value = value;
-        channel.setValue(value);
-        head.setTranslateY(-((height - 2 * frameY) / max) * value);
-        meaning.setText(device.getMeaning(channel.getNumber() - 1));
-        name.setText(device.getChannelName(channel.getNumber() - 1));
-        //System.out.println(value);
+        if (value >= 0 && value < 256) {
+            this.value = value;
+            channel.setValue(value);
+            head.setTranslateY(-((height - 2 * frameY) / max) * value);
+            meaning.setText(device.getMeaning(channel.getNumber() - 1));
+            name.setText(device.getChannelName(channel.getNumber() - 1));
+            //System.out.println(value);
+        }
     }
 
     public void act() {
-        this.value = channel.getValue();
+        if (channel.getValue() >= 0 && channel.getValue() < 256) {
+            this.value = channel.getValue();
+        }
         try {
             head.setTranslateY(-((height - 2 * frameY) / max) * value);
         } catch (Exception ex) {

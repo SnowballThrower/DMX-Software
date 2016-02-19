@@ -67,7 +67,7 @@ public class MidiConnection extends Thread {
                                 //Logger.getLogger(MidiConnection.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        if (true) {//midiIn == null) {
+                        if (midiIn == null) {
                             try {
                                 List<Transmitter> transmitters = dmxController.getTransmitters();
                                 for (Transmitter transmitter : transmitters) {

@@ -152,6 +152,7 @@ int diff = 6;
 int Min = 10;
 int Max = 1018;
 double dTime = 0; //0.1
+double rTime = 2.0;
 int transSteps = 32;
 //*********************
 //counters
@@ -400,9 +401,9 @@ void remoteLoop() {
 
   encoder();
 
-  
 
-  delay(dTime);
+
+  delay(rTime);
   transmitter();
   buttonRead(s);
 
@@ -460,7 +461,7 @@ void serialEvent() {
             values[targetCh] = 2 * receivemidi[2];
           } else {
             if (noteCC == 3) {
-              handleProgramChange(receivemidi[1],receivemidi[2]);
+              handleProgramChange(receivemidi[1], receivemidi[2]);
             } else {
               if (receivemidi[0] < 3) {
                 if (receivemidi[1] >= lowNotes[midiCh]) {
@@ -514,18 +515,19 @@ void midiButtonSend(bool fs, bool hi, byte num) {
     Serial.write(Note_Off);
     Serial.write(8 * fs + num);
   }
+  Serial.write(0);
 }
 
 void handleProgramChange(byte r1, byte r2) {
-  if (true){//r1 < 64) {
+  if (true) { //r1 < 64) {
     bool col = r1 < 32;
     byte line = (r1 % 32) / 2;
     byte val = r2 * 2 + r1 % 2;
     lcd.setCursor(line, col);
     lcd.print((char)val);
   }
-  else{
-    
+  else {
+
   }
 }
 
@@ -543,12 +545,18 @@ void buttonRead(int s) {
   }
   if (pbs[s] && !pushs[s]) {
     pushs[s] = true;
+    if (mode == 3) {
+      midiButtonSend(false, true, s);
+    }
   } else {
     pushs[s] = pbs[s];
   }
   if (pbf[s] && !pushf[s]) {
     pushf[s] = true;
     pf[s] = true;
+    if (mode == 3) {
+      midiButtonSend(true, true, s);
+    }
   } else {
     pushf[s] = pbf[s];
   }
@@ -601,6 +609,9 @@ void encoder() {
   if (turn) {
     deactivateFaders();
     if (turnRnL) {
+      if (mode == 3) {
+        midiButtonSend(true, true, 8);
+      }
       if (DevChn) {
         dev = calc(dev, 1, noD);
         Ch = deviceStart[dev];
@@ -608,6 +619,9 @@ void encoder() {
         Ch = calc(Ch, 1, ChN + xCh);
       }
     } else {
+      if (mode == 3) {
+        midiButtonSend(true, true, 9);
+      }
       if (DevChn) {
         dev = calc(dev, -1, noD);
         Ch = deviceStart[dev];
@@ -616,13 +630,14 @@ void encoder() {
       }
     }
     turn = false;
-    lcd.clear();
-    lcd.print(String(Ch + 1));
-    lcd.setCursor(0, 1);
-    for (p = 0; p < 8; p++) {
-      printChannelName(p);
+    if (mode != 3) {
+      lcd.clear();
+      lcd.print(String(Ch + 1));
+      lcd.setCursor(0, 1);
+      for (p = 0; p < 8; p++) {
+        printChannelName(p);
+      }
     }
-
   }
 }
 

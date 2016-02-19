@@ -26,6 +26,7 @@ public class HelloWorldMain extends Application {
     public void start(Stage primaryStage) {
         Manage mng = new Manage();
         Button btn = new Button();
+        Devices devices = new Devices(mng);
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -33,8 +34,7 @@ public class HelloWorldMain extends Application {
             public void handle(ActionEvent event) {
                 System.out.println("Hello World!");
                 mng.startMidi();
-                Devices devices = new Devices(mng);
-                ControlSurface cs = new ControlSurface(mng, devices.getDevices(),devices.getChannels());
+                ControlSurface cs = new ControlSurface(mng, devices.getDevices(), devices.getChannels());
             }
         });
 
