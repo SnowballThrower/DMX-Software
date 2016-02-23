@@ -81,7 +81,7 @@ public class Manage {
 
             devs.getChannels().get(faderChannel + fader).setValue(value / 4);
         } catch (IndexOutOfBoundsException | NullPointerException ex) {
-            System.out.println("nö");
+            System.out.println("nicht zugeordnet");
         }
     }
 

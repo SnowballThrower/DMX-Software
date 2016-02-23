@@ -99,6 +99,13 @@ public class ControlSurface extends Application {
             public void handle(ActionEvent event) {
                 stack.getChildren().clear();
                 stack.getChildren().add(bars);
+                for (Device device : devices) {
+                    if (device.getType().getType() == Type.Bar) {
+                        Bar bar = new Bar(200, 10);
+                        //stack.getChildren().add(bar.getGroup());
+                    }
+                }
+                stack.setAlignment(Pos.TOP_CENTER);
             }
         });
 
