@@ -33,13 +33,20 @@ public abstract class Channel {
     }
 
     public void act() {
-        for (Fader fader : faders) {
-            try {
-                fader.act();
-            } catch (Exception e) {
-                System.out.println("Fehler bei fader aktualisieren.");
+        Platform.runLater(new Runnable() {
+
+            @Override
+            public void run() {
+
+                for (Fader fader : faders) {
+                    try {
+                        fader.act();
+                    } catch (Exception e) {
+                        System.out.println("Fehler bei fader aktualisieren.");
+                    }
+                }
             }
-        }
+        });
     }
 
     public int getValue() {
@@ -69,8 +76,9 @@ public abstract class Channel {
     public void register(Fader aThis) {
         faders.add(aThis);
     }
-    public void setHighlighted(boolean high){
-        for(Fader fader : faders){
+
+    public void setHighlighted(boolean high) {
+        for (Fader fader : faders) {
             fader.highlight(high);
         }
     }
