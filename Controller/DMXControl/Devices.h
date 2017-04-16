@@ -17,13 +17,16 @@ byte deviceType[noD];
 char channelNames[(ChN + xCh) * 2];
 char typeNames[noT * 3];
 char typeChnNames[maxCh  * 2];
-byte smF[maxCh * noT]; //simpleMode
-byte smW[maxCh * noT]; //simpleMode
+byte smF[maxCh * noT]; //simpleModeFader(0,1-8)
+byte smW[maxCh * noT]; //simpleModeStandardValue
 
 int twoBytes;
 byte lByte;
 byte hByte;
 
+int tpB = 4; //#Bytes/Type
+int tpD = 5; //#Bytes/Device
+int tpN = 4; //#Bytes/Channel
 
 
 

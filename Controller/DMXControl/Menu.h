@@ -164,3 +164,29 @@ void setupFaderNames() {
     faderNames[i + k * 16] = sNames8.charAt(i);
   }
 }
+
+
+void printChannelName(int s) {
+  lcd.setCursor(s * 2, 1);
+  lcd.print(channelNames[2 * targetChannel(s)]);
+  lcd.setCursor(s * 2 + 1, 1);
+  lcd.print(channelNames[2 * targetChannel(s) + 1]);
+  if (!DevChn) {
+    lcd.setCursor(s * 2, 0);
+    lcd.print(names[2 * targetChannel(s)]);
+    lcd.setCursor(s * 2 + 1, 0);
+    lcd.print(names[2 * targetChannel(s) + 1]);
+  }
+  if (DevChn) {
+    lcd.setCursor(4, 0);
+    lcd.print(deviceNames[2 * dev]);
+    lcd.print(deviceNames[2 * dev + 1]);
+    lcd.print( " " );
+    lcd.print(typeNames[deviceType[dev] * 3]);
+    lcd.print(typeNames[deviceType[dev] * 3 + 1]);
+    lcd.print(typeNames[deviceType[dev] * 3 + 2]);
+
+    lcd.print( " " );
+    lcd.print(String(dev));
+  }
+}

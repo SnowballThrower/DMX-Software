@@ -25,18 +25,12 @@ bool turnRnL = false;
 //constants
 double dTime = 0; //0.1
 double rTime = 1.0;
-int transSteps = 32;
 //*********************
 //counters
-int t = 0; //transmit
 int s = 0; //selected (Multiplexer)
 int c = 0; //u.a. simpleFader
-int d = 0; //simpleFader
-int x; //transmit
-int schritt = 0;
-int wdh = 0;
+int d = 0; //simple Standard
 double sendingTime = 0;
-int g; //targetChannel
 //*********************
 //inits
 byte dispR = 0;
@@ -97,8 +91,6 @@ void setup() {
 
   digitalWrite(sLED, HIGH);
 
-  schritt = 0;
-  wdh = 0;
   //analogWrite(R,values[0]);
   //analogWrite(G,values[1]);
   //analogWrite(B,values[2]);
@@ -267,50 +259,6 @@ void buttonRead(int s) {
 //*************************************
 
 
-void transmitter() {
-  Serial1.flush();
-  transmit(t * 512 / transSteps);
-  t++;
-  if (t >= transSteps) {
-    t = 0;
-  }
-}
-void transmitter2() {
-  Serial1.flush();
-  transmit2(t * 512 / transSteps);
-  t++;
-  if (t >= transSteps) {
-    t = 0;
-  }
-}
-void transmit(int s) {
-  if (s == 0) {
-    Serial1.begin(10000, SERIAL_8N2);
-    Serial1.write(255);
-    Serial1.begin(250000, SERIAL_8N2);
-    Serial1.write(0);
-  }
-  x = s;
-  while (x < s + (512 / transSteps)) {
-
-    Serial1.write(values[x]);
-    x++;
-  }
-}
-void transmit2(int s) {
-  if (s == 0) {
-    Serial1.begin(10000, SERIAL_8N2);
-    Serial1.write(255);
-    Serial1.begin(250000, SERIAL_8N2);
-    Serial1.write(0);
-  }
-  x = s;
-  while (x < s + (512 / transSteps)) {
-
-    Serial1.write(smV[x]);
-    x++;
-  }
-}
 
 //******************************************
 
@@ -391,30 +339,6 @@ void rotLeft() {
 void rotRight() {
 }
 
-void printChannelName(int s) {
-  lcd.setCursor(s * 2, 1);
-  lcd.print(channelNames[2 * targetChannel(s)]);
-  lcd.setCursor(s * 2 + 1, 1);
-  lcd.print(channelNames[2 * targetChannel(s) + 1]);
-  if (!DevChn) {
-    lcd.setCursor(s * 2, 0);
-    lcd.print(names[2 * targetChannel(s)]);
-    lcd.setCursor(s * 2 + 1, 0);
-    lcd.print(names[2 * targetChannel(s) + 1]);
-  }
-  if (DevChn) {
-    lcd.setCursor(4, 0);
-    lcd.print(deviceNames[2 * dev]);
-    lcd.print(deviceNames[2 * dev + 1]);
-    lcd.print( " " );
-    lcd.print(typeNames[deviceType[dev] * 3]);
-    lcd.print(typeNames[deviceType[dev] * 3 + 1]);
-    lcd.print(typeNames[deviceType[dev] * 3 + 2]);
-
-    lcd.print( " " );
-    lcd.print(String(dev));
-  }
-}
 
 
 void power() {
@@ -450,14 +374,6 @@ void powerDown() {
 void powerUp() {
 
 }
-
-//*********************************************
-
-
-
-
-//*********************************************
-
 
 
 //*****************************************
@@ -496,7 +412,7 @@ void simpleFaders() {
       if (c == 0) {
         valuebuffer = d;
       } else {
-        if (c < 9) {
+        if (c <= 8) {
           valuebuffer = conv(analogRead(As[c - 1]));
         } else {
           valuebuffer = 0;

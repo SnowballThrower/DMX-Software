@@ -9,6 +9,8 @@ const int maxCh = 12;//#Channels/Device, 12 damit passend für Bar!
 const int noD = 33;  //#Devices
 const int noT = 20;  //#Types
 
+int transSteps = 32;
+
 //EEPROM
 int FLASHED = 2000; //Adress
 int flashNumber = 175; //Hash
@@ -16,9 +18,6 @@ int CHSTART = 0; //Scenes
 int TYPSTART = 1000; //Device
 int NAMESTART = 1100; //Device
 int DEVSTART = 1800; //Device
-int tpB = 4;
-int tpD = 5;
-int tpN = 4;
 
 
 

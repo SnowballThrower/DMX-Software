@@ -126,4 +126,54 @@ void valueReadChange(int s) {
 }
 
 
+//***********************************************************
+//Transmit
+
+void transmit(int s) {
+  if (s == 0) {
+    Serial1.begin(10000, SERIAL_8N2);
+    Serial1.write(255);
+    Serial1.begin(250000, SERIAL_8N2);
+    Serial1.write(0);
+  }
+  int x = s;
+  while (x < s + (512 / transSteps)) {
+
+    Serial1.write(values[x]);
+    x++;
+  }
+}
+void transmit2(int s) {
+  if (s == 0) {
+    Serial1.begin(10000, SERIAL_8N2);
+    Serial1.write(255);
+    Serial1.begin(250000, SERIAL_8N2);
+    Serial1.write(0);
+  }
+  int x = s;
+  while (x < s + (512 / transSteps)) {
+
+    Serial1.write(smV[x]);
+    x++;
+  }
+}
+
+void transmitter() {
+  Serial1.flush();
+  transmit(t * 512 / transSteps);
+  t++;
+  if (t >= transSteps) {
+    t = 0;
+  }
+}
+void transmitter2() {
+  Serial1.flush();
+  transmit2(t * 512 / transSteps);
+  t++;
+  if (t >= transSteps) {
+    t = 0;
+  }
+}
+
+
 #endif

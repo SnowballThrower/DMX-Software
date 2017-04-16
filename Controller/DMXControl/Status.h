@@ -25,6 +25,7 @@ byte led[8];
 
 bool midiActive = false;
 
+int t = 0; //transmit
 
 int Ch = 0;
 int dev = 0;
