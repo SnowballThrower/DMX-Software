@@ -10,116 +10,40 @@
 #include "Midi.h"
 
 
-
-int pc6 = 22; //unused
-int pc7 = 23; //unused
-
-
-//Fader
-int As[] = {A0, A1, A2, A3, A4, A5, A6, A7};
-
 //*************************************************
 
-
-
-//const int maxCh = 12; //12 damit passend für Bar!
-//const int noD = 33;
-//const int noT = 20;
-//char deviceNames[noD * 2];
-//byte typeLength[noD];
-//int deviceStart[noD];
-//byte deviceType[noD];
-//char channelNames[(ChN + xCh) * 2];
-//char typeNames[noT * 3];
-//char typeChnNames[maxCh  * 2];
-//byte smF[maxCh * noT];
-//byte smW[maxCh * noT];
-
-//int FLASHED = 2000;
-//int flashNumber = 176;
-//int CHSTART = 0;
-//int TYPSTART = 1000;
-//int NAMESTART = 1100;
-//int DEVSTART = 1800;
-//int tpB = 4;
-//int tpD = 5;
-//int tpN = 4;
-
-
-
-int ChD1 = 7;
-int ChD2 = 10;
-int G1S = 0;
-int G1E = ChD1 * 4;
-int G2S = ChD1 * 4;
-int G2E = ChD1 * 4 + ChD2 * 4;
-
-int spd = 20;
-int Fl1S = 0;
-int Fl1E = 4 * 7;
-int Fl2S = ChN;
-int Fl2E = ChN + xCh;
-bool up[ChN + xCh];
-
-byte valuebuffer;
-
-
-
-bool Up2 = true;
-int selected = 3;
+//int selected = 3;
 
 bool lower = false;
 bool turn = false;
 bool turnRnL = false;
-bool push = false;
-bool pbutton = false;
+//bool push = false;
+//bool pbutton = false;
 
 
 //*********************
 //constants
-int diff = 6;
-int Min = 10;
-int Max = 1018;
 double dTime = 0; //0.1
 double rTime = 1.0;
 int transSteps = 32;
 //*********************
 //counters
 int t = 0; //transmit
-int s = 0;
+int s = 0; //selected (Multiplexer)
 int c = 0; //u.a. simpleFader
 int d = 0; //simpleFader
-int p; //displayNames
 int x; //transmit
-int z = 0; //flow
-int i = 0;
-int k = 0;
-//int twoBytes;
-//byte lByte;
-//byte hByte;
 int schritt = 0;
 int wdh = 0;
 double sendingTime = 0;
 int g; //targetChannel
 //*********************
 //inits
-byte dr = 0;
-byte dg = 0;
-byte db = 0;
-byte dd = 0;
-byte dc = 110;
-
-int Ch = 0;
-int dev = 0;
-bool DevChn = true;
-//*********************
-// simpleMode
-byte smV[ChN + xCh];
-const int noP = 1;
-int page = 0;
-char faderNames[9 * 16 * noP];
-
-//*************************************************
+byte dispR = 0;
+byte dispG = 0;
+byte dispB = 0;
+byte dispDimm = 0;
+byte dispCont = 110;
 
 //*********************************************
 //
@@ -142,8 +66,7 @@ void setup() {
 
 
   digitalWrite(sLED, HIGH);
-  //startProz++;
-  select(startProz);
+  int i;
   for (i = 0; i < ChN + xCh; i++) {
     values[i] = 0;
   }
@@ -163,23 +86,16 @@ void setup() {
   setupFaderNames();
 
   digitalWrite(sLED, HIGH);
-  //startProz++;
-  select(startProz);
 
   if (EEPROM.read(FLASHED) != flashNumber) {
     setupNames();
   }
 
   digitalWrite(sLED, HIGH);
-  startProz++;
-  select(startProz);
 
   setupChannels();
 
   digitalWrite(sLED, HIGH);
-  startProz++;
-  select(startProz);
-  setupFlows();
 
   schritt = 0;
   wdh = 0;
@@ -194,7 +110,6 @@ void setup() {
 
   lcd.clear();
   lcd.print(String(Ch + 1));
-  z = 0;
 
   lcd.setCursor(0, 1);
   for (i = 0; i < 8; i++) {
@@ -203,6 +118,7 @@ void setup() {
   }
   s = 0;
   //printMenu();
+  int p;
   for (p = 0; p < 8; p++) {
     printChannelName(p);
   }
@@ -216,6 +132,9 @@ void loop() {
   if (mode != 3) {
     digitalWrite(sLED, active[s]);
   }
+
+  //LoopBody
+
   switch (mode) {
     case 0: simpleLoop(); break;
     case 1:
@@ -223,6 +142,9 @@ void loop() {
     case 3: analogWrite(sLED, led[s]); remoteLoop(); break;
     default: mode = 0; simpleInit(); break;
   }
+
+  //LoopEnd
+
   s++;
   if (s > 7) {
     s = 0;
@@ -231,6 +153,7 @@ void loop() {
 }
 void changeMode() {
   deactivateFaders();
+  int p;
   switch (mode) {
     case 0: simpleInit; break;
     case 1:
@@ -242,14 +165,12 @@ void changeMode() {
   }
 }
 void channelLoop() {
-
-
-
   encoder();
   if (pf[Enc]) {
     DevChn = !DevChn;
     pf[Enc] = false;
     lcd.clear();
+    int p;
     for (p = 0; p < 8; p++) {
       printChannelName(p);
     }
@@ -268,11 +189,10 @@ void channelLoop() {
   transmitter();
   buttonRead(s);
 
-  midiActive = pbf[GlA];
+  midiActive = pushButtonF[GlA];
 
-  flow();
 
-  valueRead();
+  valueRead(s);
 
   displayAnalog();
 
@@ -291,7 +211,7 @@ void remoteLoop() {
 
   midiActive = true;
 
-  valueReadChange();
+  valueReadChange(s);
 
   displayAnalog();
 
@@ -302,47 +222,51 @@ void remoteLoop() {
 
 
 void buttonRead(int s) {
-  pbp = digitalRead(powerButton) == 1;
-  pbs[s] = digitalRead(sB) == 0;
-  pbf[s] = digitalRead(fB) == 1;
-  if (pbp && !pushp) {
+  pushButtonP = digitalRead(powerButton) == 1;
+  pushButtonS[s] = digitalRead(sB) == 0;
+  pushButtonF[s] = digitalRead(fB) == 1;
+  if (pushButtonP && !pushp) {
     pushp = true;
     //pp = true;
     mode++;
     changeMode();
   } else {
-    pushp = pbp;
+    pushp = pushButtonP;
   }
 
   if (mode == 3) {
-    if (!pbs[s] && pushs[s]) {
+    if (!pushButtonS[s] && pushs[s]) {
       midiButtonSend(false, false, s);
     }
   }
-  if (pbs[s] && !pushs[s]) {
+  if (pushButtonS[s] && !pushs[s]) {
     pushs[s] = true;
     if (mode == 3) {
       midiButtonSend(false, true, s);
     }
   } else {
-    pushs[s] = pbs[s];
+    pushs[s] = pushButtonS[s];
   }
   if (mode == 3) {
-    if (!pbf[s] && pushf[s]) {
+    if (!pushButtonF[s] && pushf[s]) {
       midiButtonSend(true, false, s);
     }
   }
-  if (pbf[s] && !pushf[s]) {
+  if (pushButtonF[s] && !pushf[s]) {
     pushf[s] = true;
     pf[s] = true;
     if (mode == 3) {
       midiButtonSend(true, true, s);
     }
   } else {
-    pushf[s] = pbf[s];
+    pushf[s] = pushButtonF[s];
   }
 
 }
+
+//*************************************
+
+
 void transmitter() {
   Serial1.flush();
   transmit(t * 512 / transSteps);
@@ -387,6 +311,10 @@ void transmit2(int s) {
     x++;
   }
 }
+
+//******************************************
+
+
 void encoder() {
   if (turn) {
     deactivateFaders();
@@ -416,6 +344,7 @@ void encoder() {
       lcd.clear();
       lcd.print(String(Ch + 1));
       lcd.setCursor(0, 1);
+      int p;
       for (p = 0; p < 8; p++) {
         printChannelName(p);
       }
@@ -423,83 +352,31 @@ void encoder() {
   }
 }
 
-void valueRead() {
-  if (pushs[s]) {
-    active[s] = ! active[s];
-  }
-  fader[s] = analogRead(As[s]);
-  if (!active[s]) {
-    if (fadeOld[s] < fader[s] - diff || fadeOld[s] > fader[s] + diff) {
-      active[s] = true;
-    }
-  }
-  if (active[s]) {
-    fadeOld[s] = fader[s];
-    if (false) { //pbf[GlA]) {
-      valuebuffer = conv(analogRead(As[s]));
-      if (targetChannel(s) >= G1S && targetChannel(s) < G1E) {
-
-        for (g = targetChannel(s); g < G1E; g = g + ChD1) {
-          values[g] = valuebuffer;
-        }
-        for (g = targetChannel(s); g >= G1S; g = g - ChD1) {
-          values[g] = valuebuffer;
-        }
-      }
-      values[targetChannel(s)] = valuebuffer;
-      if (targetChannel(s) >= G2S && targetChannel(s) < G2E) {
-
-        for (g = targetChannel(s); g < G2E; g = g + ChD2) {
-          values[g] = valuebuffer;
-        }
-        for (g = targetChannel(s); g >= G2S; g = g - ChD2) {
-          values[g] = valuebuffer;
-        }
-      }
-    } else {
-      values[targetChannel(s)] = conv(analogRead(As[s]));
-    }
-  }
-}
-
-void valueReadChange() {
-  fader[s] = analogRead(As[s]);
-  if (fadeOld[s] < fader[s] - diff || fadeOld[s] > fader[s] + diff) {
-
-
-    fadeOld[s] = fader[s];
-
-    midiSend(fader[s], s);
-  }
-}
-
 void displayAnalog() {
-  dr = values[ChN + 0];
-  dg = values[ChN + 1];
-  db = values[ChN + 2];
-  dd = values[ChN + 3];
-  dc = values[ChN + 4];
-  analogWrite(R, (255 - (dr * dd / 255)));
-  analogWrite(G, (255 - (dg * dd / 255)));
-  analogWrite(B, (255 - (db * dd / 255)));
-  analogWrite(C, dc);
+  dispR = values[ChN + 0];
+  dispG = values[ChN + 1];
+  dispB = values[ChN + 2];
+  dispDimm = values[ChN + 3];
+  dispCont = values[ChN + 4];
+  analogWrite(R, (255 - (dispR * dispDimm / 255)));
+  analogWrite(G, (255 - (dispG * dispDimm / 255)));
+  analogWrite(B, (255 - (dispB * dispDimm / 255)));
+  analogWrite(C, dispCont);
 }
 void displayAnalog2() {
-  dr = smV[ChN + 0];
-  dg = smV[ChN + 1];
-  db = smV[ChN + 2];
-  dd = smV[ChN + 3];
-  dc = smV[ChN + 4];
-  analogWrite(R, (255 - (dr * dd / 255)));
-  analogWrite(G, (255 - (dg * dd / 255)));
-  analogWrite(B, (255 - (db * dd / 255)));
-  analogWrite(C, dc);
+  dispR = smV[ChN + 0];
+  dispG = smV[ChN + 1];
+  dispB = smV[ChN + 2];
+  dispDimm = smV[ChN + 3];
+  dispCont = smV[ChN + 4];
+  analogWrite(R, (255 - (dispR * dispDimm / 255)));
+  analogWrite(G, (255 - (dispG * dispDimm / 255)));
+  analogWrite(B, (255 - (dispB * dispDimm / 255)));
+  analogWrite(C, dispCont);
 }
 
 
-byte conv(int a) {
-  return (constrain(map(a, Min, Max, 0, 255), 0, 255));
-}
+
 void rotLeft() {
   if (lower && digitalRead(l) == HIGH && digitalRead(r) == LOW) {
     turn = true;
@@ -538,124 +415,7 @@ void printChannelName(int s) {
     lcd.print(String(dev));
   }
 }
-int targetChannel(int p) {
-  if (fix[p]) {
-    return ofs[p];
-  }
-  return calc(Ch, ofs[p], ChN + xCh);
-}
-void setupFlows() {
-  for (c = 0; c < ChD1 + xCh; c++) {
-    flows[c] = false;
-    up[c] = true;
-  }
-  for (c = 0; c < 8; c++) {
-    flows[ChD1 * c + 0] = true;
-    flows[ChD1 * c + 1] = true;
-    flows[ChD1 * c + 2] = true;
-  }
-  flows[ChN] = true;
-  flows[ChN + 1] = true;
-  flows[ChN + 2] = true;
-}
-void setupFaderNames() {
-  k = 0;
-  String sNames0 = "DAMADCMCDRMRDBFB";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames0.charAt(i);
-  }
-  k = 1;
-  String sNames1 = "MasterDimmer ADJ";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames1.charAt(i);
-  }
-  k = 2;
-  String sNames2 = "Colour-Makro ADJ";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames2.charAt(i);
-  }
-  k = 3;
-  String sNames3 = " Dimmer   Cameo ";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames3.charAt(i);
-  }
-  k = 4;
-  String sNames4 = "  Makro  Cameo  ";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames4.charAt(i);
-  }
-  k = 5;
-  String sNames5 = "Dimmer Renkforce";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames5.charAt(i);
-  }
-  k = 6;
-  String sNames6 = "Makro  Renkforce";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames6.charAt(i);
-  }
-  k = 7;
-  String sNames7 = "MasterDimmer BAR";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames7.charAt(i);
-  }
-  k = 8;
-  String sNames8 = "  Colours  BAR  ";
-  for (i = 0; i < 16; i++) {
-    faderNames[i + k * 16] = sNames8.charAt(i);
-  }
-}
 
-void flow() {
-  if (pbf[FlA]) {
-    z++;
-    if (z > spd) {
-      z = 0;
-      flow1();
-      flow2();
-    }
-  }
-}
-void flow1() {
-  for (c = Fl1S; c < Fl1E; c++) {
-    if (flows[c]) {
-      if (values[c] <= 0) {
-        values[c] = 0;
-        up[c] = true;
-      }
-      if (values[c] >= 255) {
-        values[c] = 255;
-        up[c] = false;
-      }
-      valuebuffer = values[c];
-      if (up[c]) {
-        values[c] = constrain(valuebuffer + 1, 0, 255);
-      } else {
-        values[c] = constrain(valuebuffer - 1, 0, 255);
-      }
-    }
-  }
-}
-void flow2() {
-  for (c = Fl2S; c < Fl2E; c++) {
-    if (flows[c]) {
-      if (values[c] <= 0) {
-        values[c] = 0;
-        up[c] = true;
-      }
-      if (values[c] >= 255) {
-        values[c] = 255;
-        up[c] = false;
-      }
-      valuebuffer = values[c];
-      if (up[c]) {
-        values[c] = constrain(valuebuffer + 1, 0, 255);
-      } else {
-        values[c] = constrain(valuebuffer - 1, 0, 255);
-      }
-    }
-  }
-}
 
 void power() {
   if (pp) {
@@ -671,6 +431,7 @@ void powerDown() {
   delay(1000);
   int g;
   int h;
+  byte valuebuffer;
   for (h = 0; h < 255; h++) {
     switch (h % 3) {
       case 0: lcd.print(F("Shutting Down.. ")); break;
@@ -714,6 +475,7 @@ void simpleLoop() {
       deactivateFaders();
       active[s] = true;
       lcd.setCursor(0, 1);
+      int i;
       for (i = 0; i < 16; i++) {
         lcd.print(faderNames[(s + 1) * 16 + i]);
       }
@@ -724,6 +486,9 @@ void simpleLoop() {
 }
 
 void simpleFaders() {
+  int k;
+  int i;
+  byte valuebuffer;
   for (k = s * noD / 8; k < (s + 1)*noD / 8; k++) {
     for (i = 0; i < typeLength[deviceType[k]]; i++) {
       c = smF[maxCh * deviceType[k] + i];
@@ -747,6 +512,7 @@ void simpleInit() {
   lcd.print("Einfacher Modus" + String(page));
   lcd.setCursor(0, 1);
   deactivateFaders();
+  int i;
   for (i = 0; i < 16; i++) {
     lcd.print(faderNames[i]);
   }

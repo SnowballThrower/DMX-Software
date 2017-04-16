@@ -1,6 +1,13 @@
+#ifndef scenes
+#define scenes
+
 #include <avr/pgmspace.h>
 #include <EEPROM.h>
 #include "Utils.h"
+
+int scene;
+int len;
+
 
 void loadValues() {
   deactivateFaders();
@@ -18,3 +25,5 @@ void saveValues() {
     }
   }
 }
+
+#endif

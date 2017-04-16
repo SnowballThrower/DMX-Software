@@ -1,14 +1,35 @@
 #ifndef globals
 #define globals
 
+#include <Arduino.h>
+
 const int ChN = 512; // <= 512
 const int xCh = 5;
-const int maxCh = 12; //12 damit passend für Bar!
-const int noD = 33;
-const int noT = 20;
+const int maxCh = 12;//#Channels/Device, 12 damit passend für Bar!
+const int noD = 33;  //#Devices
+const int noT = 20;  //#Types
+
+//EEPROM
+int FLASHED = 2000; //Adress
+int flashNumber = 175; //Hash
+int CHSTART = 0; //Scenes
+int TYPSTART = 1000; //Device
+int NAMESTART = 1100; //Device
+int DEVSTART = 1800; //Device
+int tpB = 4;
+int tpD = 5;
+int tpN = 4;
 
 
 
+
+//Pins
+
+int pc6 = 22; //unused
+int pc7 = 23; //unused
+
+//Fader
+int As[] = {A0, A1, A2, A3, A4, A5, A6, A7};
 
 //FrontPanel
 int s0 = 2;

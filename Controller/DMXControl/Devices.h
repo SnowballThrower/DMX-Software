@@ -1,3 +1,6 @@
+#ifndef devices
+#define devices
+
 #include <Arduino.h>
 #include "Globals.h"
 #include <avr/pgmspace.h>
@@ -14,25 +17,8 @@ byte deviceType[noD];
 char channelNames[(ChN + xCh) * 2];
 char typeNames[noT * 3];
 char typeChnNames[maxCh  * 2];
-byte smF[maxCh * noT];
-byte smW[maxCh * noT];
-
-
-//EEPROM
-int FLASHED = 2000;
-int flashNumber = 176;
-int CHSTART = 0;
-int TYPSTART = 1000;
-int NAMESTART = 1100;
-int DEVSTART = 1800;
-int tpB = 4;
-int tpD = 5;
-int tpN = 4;
-
-
-//Counter
-int startProz = 0;
-
+byte smF[maxCh * noT]; //simpleMode
+byte smW[maxCh * noT]; //simpleMode
 
 int twoBytes;
 byte lByte;
@@ -348,7 +334,7 @@ void setupTypes() {
   typeChnNames[0] = 'D';
   typeChnNames[1] = 'm';
   typeChnNames[2] = 'R';
-  typeChnNames[3] = 'M';
+  typeChnNames[3] = 'o';
   typeChnNames[4] = 'G';
   typeChnNames[5] = 'r';
   typeChnNames[6] = 'B';
@@ -385,14 +371,10 @@ void setupTypes() {
   save1Type(tp);
 
   readTypeChannelNames(0);
-  startProz++;//3
-  //    select(startProz);
 }
 void setupChannels() {
   int i;
   int k;
-  startProz++;
-  //    select(startProz);
   for (k = 0; k < noD * 2; k++) {
     deviceNames[k] = '|';
   }
@@ -407,13 +389,8 @@ void setupChannels() {
     channelNames[i] = '-';
   }
 
-  startProz++;
-  //    select(startProz);
-
   loadDevTyp();
 
-  startProz++;
-  //    select(startProz);
   for (k = 0; k < noD; k++) {
     readTypeChannelNames(deviceType[k]);
     for (i = deviceStart[k]; i < (deviceStart[k] + typeLength[deviceType[k]]); i++) {
@@ -440,8 +417,6 @@ void setupNames() {
   }
 
 
-  startProz++;//1
-  //    select(startProz);
 
   deviceNames[0] = 'A';
   deviceNames[1] = 'D';
@@ -523,9 +498,6 @@ void setupNames() {
   }
 
 
-  startProz++; //2
-  //    select(startProz);
-
   setupTypes();
 
 
@@ -539,20 +511,16 @@ void setupNames() {
     }
   }
 
-  startProz++;//4
-//  select(startProz);
 
   for (i = 0; i < noD; i++) {
     saveDevice(i);
   }
-  startProz++;//5
-//  select(startProz);
   for (i = 0; i < noT; i++) {
     saveType(i);
   }
 
-  startProz++;//6
-//  select(startProz);
   EEPROM.write(FLASHED, flashNumber);
 }
 
+
+#endif

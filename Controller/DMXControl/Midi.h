@@ -1,3 +1,6 @@
+#ifndef mymidi
+#define mymidi
+
 #include <Arduino.h>
 
 
@@ -140,3 +143,4 @@ void midiButtonSend(bool fs, bool hi, byte num) {
   Serial.write(0);
 }
 
+#endif

@@ -47,6 +47,10 @@ byte BackJump[] = {0 , 0 , 0 , 0 , 0 , 1 , 1 , 1 , 2 , 2 , 2 , 3 , 3 , 3 , 4 , 4
 
 
 
+// simpleMode
+const int noP = 1;
+int page = 0;
+char faderNames[9 * 16 * noP];
 
 
 //*********************************************
@@ -107,5 +111,56 @@ void menu() {
     MenuRight();
     pf[Men] = false;
     printMenu();
+  }
+}
+
+//******************
+//SimpleMode
+void setupFaderNames() {
+  int k = 0;
+  int i;
+  String sNames0 = "DAMADCMCDRMRDBFB";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames0.charAt(i);
+  }
+  k = 1;
+  String sNames1 = "MasterDimmer ADJ";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames1.charAt(i);
+  }
+  k = 2;
+  String sNames2 = "Color-Makro ADJ ";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames2.charAt(i);
+  }
+  k = 3;
+  String sNames3 = " Dimmer   Cameo ";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames3.charAt(i);
+  }
+  k = 4;
+  String sNames4 = "  Makro  Cameo  ";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames4.charAt(i);
+  }
+  k = 5;
+  String sNames5 = "Dimmer Renkforce";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames5.charAt(i);
+  }
+  k = 6;
+  String sNames6 = "Makro  Renkforce";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames6.charAt(i);
+  }
+  k = 7;
+  String sNames7 = "MasterDimmer BAR";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames7.charAt(i);
+  }
+  k = 8;
+  String sNames8 = "  Colors  BAR   ";
+  for (i = 0; i < 16; i++) {
+    faderNames[i + k * 16] = sNames8.charAt(i);
   }
 }

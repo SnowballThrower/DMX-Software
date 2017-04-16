@@ -2,18 +2,18 @@
 #define statusse
 
 byte values[ChN + xCh];
-bool flows[ChN + xCh];
+byte smV[ChN + xCh]; //simpleModeValues
 
 
 bool pushp;
-bool pbp;
+bool pushButtonP;
 bool pp;
 bool pushs[8];
+bool pushButtonS[8];
 bool pushf[8];
-bool pbs[8];
+bool pushButtonF[8];
 bool pf[8];
 bool werte[8];
-bool pbf[8];
 
 
 int fadeOld[8];
@@ -24,5 +24,10 @@ bool active[8];
 byte led[8];
 
 bool midiActive = false;
+
+
+int Ch = 0;
+int dev = 0;
+bool DevChn = true;
 
 #endif
