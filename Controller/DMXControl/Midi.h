@@ -42,86 +42,102 @@ void handlePitch(byte r1, byte r2) {
   }
 }
 
+void firstByte() {
+  midicount = 0;
+  if (inByte >= ControlChange) {
+    if (inByte < 192) {
+      noteCC = 0;
+      receivemidi[0] = inByte - ControlChange;
+    }
+  }
+  if (inByte >= Note_On) {
+    if (inByte < 0xA0) {
+      noteCC = 1;
+      receivemidi[0] = inByte - 0x90;
+    }
+  }
+  if (inByte >= Note_Off) {
+    if (inByte < 0x90) {
+      noteCC = 2;
+      receivemidi[0] = inByte - 0x80;
+    }
+  }
+  if (inByte >= PITCH_BEND) {
+    if (inByte < 0xF0) {
+      noteCC = 3;
+      receivemidi[0] = inByte - PITCH_BEND;
+    }
+  }
+}
+
+void bar() {
+  barLength = (barEnd - barStart);
+  if (receivemidi[1] >= lowNotes[3]) {
+    if (receivemidi[1] < lowNotes[3] + barLength) {
+      targetCh = barStart + 3 * receivemidi[1] + receivemidi[1] / segments - lowNotes[3];
+
+      if (noteCC == 2) {
+        values[targetCh] = 0;
+      }
+      if (noteCC == 1) {
+        values[targetCh] = 2 * receivemidi[2];
+      }
+    }
+  }
+}
+
+void handleMidiData() {
+  midiCh = receivemidi[0];
+  if (noteCC == 0) {
+    targetCh = receivemidi[1] + 128 * midiCh;
+    values[targetCh] = 2 * receivemidi[2];
+  } else {
+    if (noteCC == 3) {
+      handlePitch(receivemidi[1], receivemidi[2]);
+    } else {
+      if (receivemidi[0] < 3) {
+        if (receivemidi[1] >= lowNotes[midiCh]) {
+          barLength = (barEnd - barStart) / 3;
+          if (receivemidi[1] < lowNotes[midiCh] + barLength) {
+            targetCh = barStart + 3 * receivemidi[1] + midiCh - 3 * lowNotes[midiCh];
+
+            if (noteCC == 2) {
+              values[targetCh] = 0;
+            }
+            if (noteCC == 1) {
+              values[targetCh] = 2 * receivemidi[2];
+            }
+          }
+        }
+      }
+      if (midiCh == 3) {
+        bar();
+      }
+    }
+  }
+}
+
+void nextBytes() {
+  midicount++;
+  if (midicount < 3) {
+    receivemidi[midicount] = inByte;
+  }
+  if (midicount == 2) {
+    if (midiActive) {
+      handleMidiData();
+    }
+  }
+}
+
 void serialEvent() {
   while (Serial.available()) {
     // get the new byte:
     inByte = Serial.read();
     if (inByte > 127) {
-      midicount = 0;
-      if (inByte >= ControlChange) {
-        if (inByte < 192) {
-          noteCC = 0;
-          receivemidi[0] = inByte - ControlChange;
-        }
-      }
-      if (inByte >= Note_On) {
-        if (inByte < 0xA0) {
-          noteCC = 1;
-          receivemidi[0] = inByte - 0x90;
-        }
-      }
-      if (inByte >= Note_Off) {
-        if (inByte < 0x90) {
-          noteCC = 2;
-          receivemidi[0] = inByte - 0x80;
-        }
-      }
-      if (inByte >= PITCH_BEND) {
-        if (inByte < 0xF0) {
-          noteCC = 3;
-          receivemidi[0] = inByte - PITCH_BEND;
-        }
-      }
+      firstByte();
     }
     if (inByte < 128) {
-      midicount++;
-      if (midicount < 3) {
-        receivemidi[midicount] = inByte;
-      }
-      if (midicount == 2) {
-        if (midiActive) {
-          midiCh = receivemidi[0];
-          if (noteCC == 0) {
-            targetCh = receivemidi[1] + 128 * midiCh;
-            values[targetCh] = 2 * receivemidi[2];
-          } else {
-            if (noteCC == 3) {
-              handlePitch(receivemidi[1], receivemidi[2]);
-            } else {
-              if (receivemidi[0] < 3) {
-                if (receivemidi[1] >= lowNotes[midiCh]) {
-                  barLength = (barEnd - barStart) / 3;
-                  if (receivemidi[1] < lowNotes[midiCh] + barLength) {
-                    targetCh = barStart + 3 * receivemidi[1] + midiCh - 3 * lowNotes[midiCh];
-
-                    if (noteCC == 2) {
-                      values[targetCh] = 0;
-                    }
-                    if (noteCC == 1) {
-                      values[targetCh] = 2 * receivemidi[2];
-                    }
-                  }
-                }
-              }
-              if (midiCh == 3) {
-                barLength = (barEnd - barStart);
-                if (receivemidi[1] >= lowNotes[3]) {
-                  if (receivemidi[1] < lowNotes[3] + barLength) {
-                    targetCh = barStart + 3 * receivemidi[1] + receivemidi[1] / segments - lowNotes[3];
-
-                    if (noteCC == 2) {
-                      values[targetCh] = 0;
-                    }
-                    if (noteCC == 1) {
-                      values[targetCh] = 2 * receivemidi[2];
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      nextBytes();
     }
   }
 }

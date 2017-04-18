@@ -37,6 +37,10 @@ public class MidiHandler implements Receiver {
     }
 
     private void handle(ShortMessage message) {
+        System.out.println(message.getCommand());
+        System.out.println(message.getChannel());
+        System.out.println(message.getData1());
+        System.out.println(message.getData2());
         if (message.getCommand() == CONTROL_CHANGE) {
             int fader = message.getChannel();
             int value = message.getData2() + message.getData1() * 32;
