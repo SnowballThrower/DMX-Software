@@ -526,9 +526,9 @@
 		<Name>"Display"</Name>
 		<Type>"Disp"</Type>
 		<Power>"120"</Power>
-		<Symbol>"/Pictures/DSC_1100.jpg"</Symbol>
+		<Symbol>"\Pictures\Controller.png"</Symbol>
 		
-		<Channels No="7">
+		<Channels No="13">
 		
 			
 			<Channel Nr="4" F="Dimmer">
@@ -565,6 +565,70 @@
 			
 			<Channel Nr="5" F="White">
 				<ChName>"Contrast"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+
+			<Channel Nr="6" F="Green">
+				<ChName>"LED1"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+
+			<Channel Nr="7" F="Green">
+				<ChName>"LED2"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+
+			<Channel Nr="8" F="Green">
+				<ChName>"LED3"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+
+			<Channel Nr="9" F="Green">
+				<ChName>"LED4"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+
+			<Channel Nr="10" F="Green">
+				<ChName>"LED5"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+
+			<Channel Nr="11" F="Green">
+				<ChName>"LED6"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+
+			<Channel Nr="12" F="Green">
+				<ChName>"LED7"</ChName>
+				<Values case="0">
+					<conditions>
+					</conditions>
+				</Values>
+			</Channel>
+
+			<Channel Nr="13" F="Green">
+				<ChName>"LED8"</ChName>
 				<Values case="0">
 					<conditions>
 					</conditions>

@@ -8,7 +8,6 @@ package SnowballThrower.dmxsoftware.Surface;
 import SnowballThrower.dmxsoftware.Database.Channel;
 import SnowballThrower.dmxsoftware.Database.Channels;
 import SnowballThrower.dmxsoftware.Database.DMXChannel;
-import SnowballThrower.dmxsoftware.Database.TypeChannel;
 import SnowballThrower.dmxsoftware.Database.Device;
 import SnowballThrower.dmxsoftware.Database.Function;
 import SnowballThrower.dmxsoftware.Database.Type;
@@ -22,7 +21,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
@@ -221,8 +219,8 @@ public class ControlSurface extends Application {
         FaderListener fl = new FaderListener(manager);
         for (DMXChannel channel : dmxChannels.getAll()) {
             if (channel != null) {
-                Fader fader = new Fader("" + (channel.getAdress()),
-                        channel.getAdress() * sizeX, 0, sizeX, sizeY, channel, channel.getDevice());
+                Fader fader = new Fader("" + (channel.getAddress()),
+                        channel.getAddress() * sizeX, 0, sizeX, sizeY, channel, channel.getDevice());
                 fl.addFader(fader);
                 Group fade = fader.getFader();
                 fade.addEventFilter(InputEvent.ANY, (event) -> {
@@ -232,8 +230,8 @@ public class ControlSurface extends Application {
                         event.consume();
                     }
                 });
-                Text ch = new Text("Ch " + channel.getAdress());
-                //ch.setLayoutX(channel.getAdress() * sizeX);
+                Text ch = new Text("Ch " + channel.getAddress());
+                //ch.setLayoutX(channel.getAddress() * sizeX);
                 ch.setLayoutY(-10);
                 ch.setFont(new Font(10));
                 fade.getChildren().add(ch);

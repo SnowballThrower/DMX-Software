@@ -16,7 +16,7 @@ public class DMXChannel extends Channel {
     
     Device device;
     List<ControlChannel> controls;
-    int adress;
+    int address;
     private Manage manager;
     
     public DMXChannel(TypeChannel ch) {
@@ -28,7 +28,7 @@ public class DMXChannel extends Channel {
         super(ch);
         this.number = ch.getNumber();
         this.device = dev;
-        this.adress = device.getStartCh() + number - 1;
+        this.address = device.getStartCh() + number - 1;
     }
     
     @Override
@@ -38,11 +38,11 @@ public class DMXChannel extends Channel {
             device.act();
             
         }
-        manager.handle(adress, value);
+        manager.handle(address, value);
     }
     
-    public int getAdress() {
-        return adress;
+    public int getAddress() {
+        return address;
     }
     
     public Device getDevice() {

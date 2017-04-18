@@ -6,6 +6,7 @@
 package SnowballThrower.dmxsoftware.Communicate;
 
 import SnowballThrower.dmxsoftware.Processing.Manage;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,18 +18,20 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
+
 import static javax.sound.midi.ShortMessage.CONTROL_CHANGE;
 import static javax.sound.midi.ShortMessage.PITCH_BEND;
 import static javax.sound.midi.ShortMessage.PROGRAM_CHANGE;
+
 import javax.sound.midi.Transmitter;
 
 /**
- *
  * @author Sven
  */
 public class MidiConnection extends Thread {
 
     static final int MAX_CH = 1000;
+    final int highestChannel = 517;
     MidiDevice dmxController;
     List<MidiDevice> midis;
     private int[] valOld;
@@ -113,9 +116,8 @@ public class MidiConnection extends Thread {
     }
 
     /**
-     *
-     * @param line (line (0-1).
-     * @param col Column(0-15).
+     * @param line  (line (0-1).
+     * @param col   Column(0-15).
      * @param ascii 8bit.
      */
     public void sendDisp(int line, int col, char ascii) {
@@ -139,9 +141,8 @@ public class MidiConnection extends Thread {
     }
 
     /**
-     *
-     * @param sel selection LED or other.
-     * @param led which (0-7).
+     * @param sel   selection LED or other.
+     * @param led   which (0-7).
      * @param value (0-255).
      */
     public void sendLED(int sel, int led, int value) {
@@ -166,12 +167,15 @@ public class MidiConnection extends Thread {
     private void send(int channel, int value) {
         //System.out.println("Midi send: " + channel + " ," + value / 2);
         //System.out.println("Midi send: " + (CONTROL_CHANGE + channel / 128) + " ," + channel % 128 + " ," + value / 2);
+        if (channel >= highestChannel) {
+            sendLED(1, channel - highestChannel, value);
+        }
         try {
             ShortMessage message = new ShortMessage(CONTROL_CHANGE, channel / 128, channel % 128, value / 2);
             try {
                 midiOut.send(message, -1);
             } catch (NullPointerException np) {
-                System.out.println("midi=null");
+                //System.out.println("midi=null");
 
             }
         } catch (InvalidMidiDataException ex) {

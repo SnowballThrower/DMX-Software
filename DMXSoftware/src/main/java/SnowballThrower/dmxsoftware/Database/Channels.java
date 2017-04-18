@@ -6,7 +6,7 @@
 package SnowballThrower.dmxsoftware.Database;
 
 import SnowballThrower.dmxsoftware.Processing.Manage;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
@@ -28,7 +28,7 @@ public class Channels {
             for (DMXChannel channel : device.getChannels()) {
                 if (channel != null) {
                     channel.addManager(manager);
-                    channels[channel.getAdress()] = channel;
+                    channels[channel.getAddress()] = channel;
                 }
             }
         }

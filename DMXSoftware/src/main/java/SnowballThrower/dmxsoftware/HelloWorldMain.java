@@ -8,6 +8,7 @@ package SnowballThrower.dmxsoftware;
 import SnowballThrower.dmxsoftware.Processing.Devices;
 import SnowballThrower.dmxsoftware.Processing.Manage;
 import SnowballThrower.dmxsoftware.Surface.ControlSurface;
+import SnowballThrower.dmxsoftware.Surface.MixerSurface;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,7 +18,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
- *
  * @author Sven
  */
 public class HelloWorldMain extends Application {
@@ -34,6 +34,7 @@ public class HelloWorldMain extends Application {
             public void handle(ActionEvent event) {
                 System.out.println("Hello World!");
                 mng.startMidi();
+                //MixerSurface ms = new MixerSurface(new Stage());
                 ControlSurface cs = new ControlSurface(mng, devices.getDevices(), devices.getChannels());
             }
         });
