@@ -65,4 +65,10 @@ public class Devices {
     public Channels getChannels() {
         return channels;
     }
+
+    public List<DeviceType> getTypes() {
+        return types;
+    }
+    
+    
 }

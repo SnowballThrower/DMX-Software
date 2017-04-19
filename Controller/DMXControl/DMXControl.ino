@@ -64,11 +64,13 @@ void setup() {
   for (i = 0; i < ChN + xCh; i++) {
     values[i] = 0;
   }
+  //Display
   values[ChN + 0] = 255;
   values[ChN + 1] = 255;
   values[ChN + 2] = 0;
   values[ChN + 3] = 255;
   values[ChN + 4] = 60;
+  //Fader
   for (i = 0; i < 8; i++) {
     active[i] = false;
     ofs[i] = i;
@@ -267,36 +269,12 @@ void encoder() {
   if (turn) {
     deactivateFaders();
     if (turnRnL) {
-      if (mode == 3) {
-        midiButtonSend(true, true, 8);
-      }
-      if (DevChn) {
-        dev = calc(dev, 1, noD);
-        Ch = deviceStart[dev];
-      } else {
-        Ch = calc(Ch, 1, ChN + xCh);
-      }
+      right();
     } else {
-      if (mode == 3) {
-        midiButtonSend(true, true, 9);
-      }
-      if (DevChn) {
-        dev = calc(dev, -1, noD);
-        Ch = deviceStart[dev];
-      } else {
-        Ch = calc(Ch, -1, ChN + xCh);
-      }
+      left();
     }
     turn = false;
-    if (mode != 3) {
-      lcd.clear();
-      lcd.print(String(Ch + 1));
-      lcd.setCursor(0, 1);
-      int p;
-      for (p = 0; p < 8; p++) {
-        printChannelName(p);
-      }
-    }
+    actDispAfterTurn();
   }
 }
 
@@ -323,7 +301,17 @@ void displayAnalog2() {
   analogWrite(C, dispCont);
 }
 
-
+void actDispAfterTurn() {
+  if (mode != 3) {
+    lcd.clear();
+    lcd.print(String(Ch + 1));
+    lcd.setCursor(0, 1);
+    int p;
+    for (p = 0; p < 8; p++) {
+      printChannelName(p);
+    }
+  }
+}
 
 void rotLeft() {
   if (lower && digitalRead(l) == HIGH && digitalRead(r) == LOW) {
@@ -431,6 +419,53 @@ void simpleInit() {
   int i;
   for (i = 0; i < 16; i++) {
     lcd.print(faderNames[i]);
+  }
+}
+
+void onPressSel(int number) {
+  switch (mode) {
+    case 1: break;
+  }
+}
+
+void onReleaseSel(int number) {
+
+
+}
+
+//8 = Power
+void onPressFkt(int number) {
+
+
+}
+
+//8 = Power
+void onReleaseFkt(int number) {
+
+
+}
+
+void right() {
+  if (mode == 3) {
+    midiButtonSend(true, true, 8);
+  }
+  if (DevChn) {
+    dev = calc(dev, 1, noD);
+    Ch = deviceStart[dev];
+  } else {
+    Ch = calc(Ch, 1, ChN + xCh);
+  }
+}
+
+void left() {
+  if (mode == 3) {
+    midiButtonSend(true, true, 9);
+  }
+  if (DevChn) {
+    dev = calc(dev, -1, noD);
+    Ch = deviceStart[dev];
+  } else {
+    Ch = calc(Ch, -1, ChN + xCh);
   }
 }
 

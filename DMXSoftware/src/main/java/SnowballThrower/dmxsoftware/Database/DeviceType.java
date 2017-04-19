@@ -77,4 +77,8 @@ public class DeviceType {
         return channels;
     }
 
+    public String getPicturePath() {
+        return picturePath;
+    }
+
 }
