@@ -58,6 +58,8 @@ void setup() {
   pinMode(s1, OUTPUT);
   pinMode(s2, OUTPUT);
 
+  //Higher PWM Frequency on OC3A (sLED) & OC3B
+  TCCR3B = TCCR3B & 0b11111000 | 0x01;
 
   digitalWrite(sLED, HIGH);
   int i;
@@ -118,6 +120,7 @@ void setup() {
     printChannelName(p);
   }
   mode = 1;//simpleInit();
+  actDispAfterTurn();
 }
 
 //*************************************************
@@ -201,11 +204,11 @@ void fixedLoop() {
   int ty = deviceType[dev];
   for (int k = 0; k < typeLength[ty]; k++) {
     byte c = standardChannel[ty * maxCh + k];
-    if (c > 0 && c <= 8) {
+    if (c - 1 == s) {
       if (valueReadChange(s)) {
         values[deviceStart[dev] + k] = conv(fadeOld[c - 1]);
       }
-      led[c - 1] = 255;
+      led[c - 1] = active[c - 1] * 220 + 35;
     }
   }
   //}
