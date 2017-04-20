@@ -86,6 +86,7 @@ void setup() {
   if (EEPROM.read(FLASHED) != flashNumber) {
     setupNames();
   }
+  setupFullNames();
 
   digitalWrite(sLED, HIGH);
 
@@ -123,7 +124,7 @@ void setup() {
 
 void loop() {
   select(s);
-  if (mode != 3) {
+  if (mode != 3 && mode != 1) {
     digitalWrite(sLED, active[s]);
   }
 
@@ -131,7 +132,7 @@ void loop() {
 
   switch (mode) {
     case 0: simpleLoop(); break;
-    case 1:
+    case 1: fixedLoop(); break;
     case 2: channelLoop(); break;
     case 3: analogWrite(sLED, led[s]); remoteLoop(); break;
     default: mode = 0; simpleInit(); break;
@@ -149,8 +150,8 @@ void changeMode() {
   deactivateFaders();
   int p;
   switch (mode) {
-    case 0: simpleInit; break;
-    case 1:
+    case 0: simpleInit(); break;
+    case 1: break;
     case 2: for (p = 0; p < 8; p++) {
         printChannelName(p);
       } break;
@@ -192,6 +193,28 @@ void channelLoop() {
 
 }
 
+void fixedLoop() {
+  analogWrite(sLED, led[s]);
+  encoder();
+  led[s] = 0;
+  //for (int i = 0; i < noD; i++) {
+  int ty = deviceType[dev];
+  for (int k = 0; k < typeLength[ty]; k++) {
+    byte c = standardChannel[ty * maxCh + k];
+    if (c > 0 && c <= 8) {
+      if (valueReadChange(s)) {
+        values[deviceStart[dev] + k] = conv(fadeOld[c - 1]);
+      }
+      led[c - 1] = 255;
+    }
+  }
+  //}
+  menu();
+  delay(dTime);
+  transmitter();
+  buttonRead(s);
+  displayAnalog();
+}
 
 void remoteLoop() {
 
@@ -234,10 +257,14 @@ void buttonRead(int s) {
     }
   }
   if (pushButtonS[s] && !pushs[s]) {
+    onReleaseSel(s);
+  }
+  if (pushButtonS[s] && !pushs[s]) {
     pushs[s] = true;
     if (mode == 3) {
       midiButtonSend(false, true, s);
     }
+    onPressSel(s);
   } else {
     pushs[s] = pushButtonS[s];
   }
@@ -302,6 +329,13 @@ void displayAnalog2() {
 }
 
 void actDispAfterTurn() {
+  if (mode == 1) {
+    lcd.clear();
+    lcd.print(fullTypeName(dev));
+    lcd.setCursor(0, 1);
+    lcd.print(fullDevName(dev));
+    return;
+  }
   if (mode != 3) {
     lcd.clear();
     lcd.print(String(Ch + 1));
@@ -422,15 +456,19 @@ void simpleInit() {
   }
 }
 
+
 void onPressSel(int number) {
   switch (mode) {
-    case 1: break;
+    case 1: lcd.setCursor(0, 1); lcd.print(Chs[number + 1]); break;
+    default: break;
   }
 }
 
 void onReleaseSel(int number) {
-
-
+  switch (mode) {
+    case 1: actDispAfterTurn(); break;
+    default: break;
+  }
 }
 
 //8 = Power

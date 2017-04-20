@@ -86,43 +86,22 @@ void valueRead(int s) {
   }
   if (active[s]) {
     fadeOld[s] = fader[s];
-/*
-    if (false) { //pushButtonF[GlA]) {
-      valuebuffer = conv(analogRead(As[s]));
-      if (targetChannel(s) >= G1S && targetChannel(s) < G1E) {
-
-        for (g = targetChannel(s); g < G1E; g = g + ChD1) {
-          values[g] = valuebuffer;
-        }
-        for (g = targetChannel(s); g >= G1S; g = g - ChD1) {
-          values[g] = valuebuffer;
-        }
-      }
-      values[targetChannel(s)] = valuebuffer;
-      if (targetChannel(s) >= G2S && targetChannel(s) < G2E) {
-
-        for (g = targetChannel(s); g < G2E; g = g + ChD2) {
-          values[g] = valuebuffer;
-        }
-        for (g = targetChannel(s); g >= G2S; g = g - ChD2) {
-          values[g] = valuebuffer;
-        }
-      }
-    } else {*/
-      values[targetChannel(s)] = conv(analogRead(As[s]));
-//    }
+    values[targetChannel(s)] = conv(analogRead(As[s]));
   }
 }
 
-void valueReadChange(int s) {
+bool valueReadChange(int s) {
   fader[s] = analogRead(As[s]);
-  if (fadeOld[s] < fader[s] - diff || fadeOld[s] > fader[s] + diff) {
-
-
-    fadeOld[s] = fader[s];
-
-//    midiSend(fader[s], s);
+  if (!active[s]) {
+    if (fadeOld[s] < fader[s] - diff || fadeOld[s] > fader[s] + diff) {
+      active[s] = true;
+    }
   }
+  if (active[s]) {
+    fadeOld[s] = fader[s];
+    return true;
+  }
+  return false;
 }
 
 

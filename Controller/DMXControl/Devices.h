@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include <avr/pgmspace.h>
 #include <EEPROM.h>
+#include "ChannelNames.h"
 
 
 //Memory
@@ -19,6 +20,10 @@ char typeNames[noT * 3];
 char typeChnNames[maxCh  * 2];
 byte smF[maxCh * noT]; //simpleModeFader(0,1-8)
 byte smW[maxCh * noT]; //simpleModeStandardValue
+byte standardChannel[noT * maxCh];
+
+char fullDevNames[noD * 16];
+char fullTypeNames[noT * 16];
 
 int twoBytes;
 byte lByte;
@@ -523,6 +528,163 @@ void setupNames() {
   }
 
   EEPROM.write(FLASHED, flashNumber);
+}
+
+
+String fullTypeName(int dev) {
+  char fTN[16];
+  int s = 16 * deviceType[dev];
+  for (int i = 0; i < 16; i++) {
+    fTN[i] = fullTypeNames[i + s];
+  }
+  return fTN;
+}
+
+String fullDevName(int dev) {
+  char fTN[16];
+  int s = 16 * dev;
+  for (int i = 0; i < 16; i++) {
+    fTN[i] = fullDevNames[i + s];
+  }
+  return fTN;
+}
+
+
+void lp(int d, String devNa) {
+  for (int i = 0; i < 16; i++) {
+    fullDevNames[d * 16 + i] = devNa[i];
+  }
+}
+void lt(int t, String typNa) {
+  for (int i = 0; i < 16; i++) {
+    fullTypeNames[t * 16 + i] = typNa[i];
+  }
+}
+
+void lc(int t, byte r, byte g, byte b, byte w, byte a, byte u, byte m, byte d) {
+  for (int i = 0; i < typeLength[t]; i++) {
+    standardChannel[t * maxCh + i] = 0;
+  }
+  if (r > 0)
+    standardChannel[t * maxCh + r - 1] = 1;
+  if (g > 0)
+    standardChannel[t * maxCh + g - 1] = 2;
+  if (b > 0)
+    standardChannel[t * maxCh + b - 1] = 3;
+  if (w > 0)
+    standardChannel[t * maxCh + w - 1] = 4;
+  if (a > 0)
+    standardChannel[t * maxCh + a - 1] = 5;
+  if (u > 0)
+    standardChannel[t * maxCh + u - 1] = 6;
+  if (m > 0)
+    standardChannel[t * maxCh + m - 1] = 7;
+  if (d > 0)
+    standardChannel[t * maxCh + d - 1] = 8;
+}
+
+/*
+ *deviceType[0] = 1;  //ADJ
+  deviceType[1] = 3;  //Cameo
+  deviceType[2] = 8;  //Outdoor
+  deviceType[3] = 8;  //Outdoor
+  deviceType[4] = 2;  //Renkforce
+  deviceType[5] = 2;  //Renkforce
+
+  deviceType[10] = 4;  //Bar 1
+  deviceType[11] = 5;  //Bar forts.
+  deviceType[12] = 4;  //Bar 2
+  deviceType[13] = 5;  //Bar forts.
+  deviceType[14] = 4;  //Bar 3
+  deviceType[15] = 5;  //Bar forts.
+  deviceType[16] = 4;  //Bar 4
+  deviceType[17] = 5;  //Bar forts.
+
+  deviceType[noD - 1] = noT - 1;
+ */
+
+void  setupFullNames() {
+  int d = 0;
+  String devNa;
+  devNa = " nicht vor Ort  ";
+  lp(d, devNa);
+  d++;
+  devNa = "  Deele Mitte   ";
+  lp(d, devNa);
+  d++;
+  devNa = "   Deele Tor    ";
+  lp(d, devNa);
+  d++;
+  devNa = "  Deele Wand    ";
+  lp(d, devNa);
+  d++;
+  devNa = " Kuhstall Wand  ";
+  lp(d, devNa);
+  d++;
+  devNa = "Kuhstall Fenster";
+  lp(d, devNa);
+  d = 10;
+  devNa = " nicht vor Ort 1";
+  lp(d, devNa);
+  d++;
+  devNa = " nicht vor Ort 1";
+  lp(d, devNa);
+  d++;
+  devNa = " nicht vor Ort 2";
+  lp(d, devNa);
+  d++;
+  devNa = " nicht vor Ort 2";
+  lp(d, devNa);
+  d++;
+  devNa = " nicht vor Ort 3";
+  lp(d, devNa);
+  d++;
+  devNa = " nicht vor Ort 3";
+  lp(d, devNa);
+  d++;
+  devNa = " nicht vor Ort 4";
+  lp(d, devNa);
+  d++;
+  devNa = " nicht vor Ort 4";
+  lp(d, devNa);
+  d = noD - 1;
+  devNa = " am Controller  ";
+  lp(d, devNa);
+
+  int t = 1;
+  String typNa;
+  typNa = "American DJ LED-Par";
+  lc(t, 1, 2, 3, 0, 0, 0, 4, 7);
+  lt(t, typNa);
+  t++;
+  typNa = "Renkforce LED-Par";
+  lc(t, 2, 3, 4, 5, 6, 0, 8, 1);
+  lt(t, typNa);
+  t++;
+  typNa = "Cameo LED-Par";
+  lc(t, 3, 4, 5, 6, 7, 8, 9, 1);
+  lt(t, typNa);
+  t++;
+  typNa = "LED-Bar 24KanalA";
+  lc(t, 1, 2, 3, 0, 0, 0, 0, 0);
+  lt(t, typNa);
+  t++;
+  typNa = "LED-Bar 24KanalB";
+  lc(t, 10, 11, 12, 0, 0, 0, 0, 0);
+  lt(t, typNa);
+  t++;
+  t++;
+  typNa = "LED-Bar  5-Kanal";
+  lc(t, 1, 2, 3, 0, 0, 0, 0, 0);
+  lt(t, typNa);
+  t = 8;
+  typNa = " Outdoor LED    ";
+  lc(t, 2, 3, 4, 5, 0, 0, 0, 7);
+  lt(t, typNa);
+  t = noT - 1;
+  typNa = "    Display     ";
+  lc(t, 1, 2, 3, 5, 0, 0, 0, 4);
+  lt(t, typNa);
 }
 
 
