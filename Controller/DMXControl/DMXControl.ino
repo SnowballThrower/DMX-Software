@@ -187,7 +187,7 @@ void channelLoop() {
   transmitter();
   buttonRead(s);
 
-  midiActive = pushButtonF[GlA];
+  midiActive = pushButtonF[FlA];
 
 
   valueRead(s);
@@ -197,21 +197,37 @@ void channelLoop() {
 }
 
 void fixedLoop() {
+  bool global =  pushButtonF[GlA];
   analogWrite(sLED, led[s]);
   encoder();
   led[s] = 0;
-  //for (int i = 0; i < noD; i++) {
-  int ty = deviceType[dev];
-  for (int k = 0; k < typeLength[ty]; k++) {
-    byte c = standardChannel[ty * maxCh + k];
-    if (c - 1 == s) {
-      if (valueReadChange(s)) {
-        values[deviceStart[dev] + k] = conv(fadeOld[c - 1]);
+  if (global) {
+    for (int i = 0; i < noD; i++) {
+      int ty = deviceType[i];
+      if (ty > 0){
+      for (int k = 0; k < typeLength[ty]; k++) {
+          byte c = standardChannel[ty * maxCh + k];
+          if (c - 1 == s) {
+            if (valueReadChange(s)) {
+              values[deviceStart[i] + k] = conv(fadeOld[c - 1]);
+            }
+            led[c - 1] = active[c - 1] * 220 + 35;
+          }
+        }
       }
-      led[c - 1] = active[c - 1] * 220 + 35;
+    }
+  } else { //Not global
+    int ty = deviceType[dev];
+    for (int k = 0; k < typeLength[ty]; k++) {
+      byte c = standardChannel[ty * maxCh + k];
+      if (c - 1 == s) {
+        if (valueReadChange(s)) {
+          values[deviceStart[dev] + k] = conv(fadeOld[c - 1]);
+        }
+        led[c - 1] = active[c - 1] * 220 + 35;
+      }
     }
   }
-  //}
   menu();
   delay(dTime);
   transmitter();
