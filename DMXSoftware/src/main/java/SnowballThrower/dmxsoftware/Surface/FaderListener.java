@@ -32,6 +32,8 @@ public class FaderListener implements EventHandler<MouseEvent> {
     public void addFader(Fader fader) {
         if (fader != null) {
             faders.add(fader);
+        } else {
+            System.out.println("adding fader in mouselistener without list");
         }
     }
 
@@ -40,6 +42,9 @@ public class FaderListener implements EventHandler<MouseEvent> {
     }
 
     public void mouseClicked(MouseEvent e) {
+        if(faders == null){
+            System.out.println("faders null in mouseevent");
+        }
         for (Fader fader : faders) {
             if (e.getX() >= fader.getPosX() + fader.getFrameX()
                     && e.getX() <= fader.getPosX() + fader.getWidth() - fader.getFrameX()

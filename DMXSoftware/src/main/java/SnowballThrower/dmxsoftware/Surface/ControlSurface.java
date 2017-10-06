@@ -357,9 +357,9 @@ public class ControlSurface extends Application {
         }
     }
 
-    ScrollPane scenes(){
+    Node scenes(){
         Scenes scenes = new Scenes();
         Node scnGroup = scenes.getSceneButtons(new Blender(manager),dmxChannels);
-        return new ScrollPane(scnGroup);
+        return scnGroup;
     }
 }

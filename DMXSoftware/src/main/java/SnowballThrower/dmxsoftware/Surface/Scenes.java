@@ -20,23 +20,32 @@ public class Scenes {
         SnowballThrower.dmxsoftware.Database.Scenes scenes = new SnowballThrower.dmxsoftware.Database.Scenes();
         GridPane buttons = new GridPane();
         Button create = new Button("save as Scene");
-        TextField nameField = new TextField();
+        TextField nameField = new TextField("Scene-name");
+        TextField timeField = new TextField("blending-time");
         create.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 scenes.saveScene(Scene.toScene(nameField.getText(),channels.getAll()));
             }
         });
-        int i = 1;
         buttons.add(nameField,0,0);
-        buttons.add(create, 0, i);
+        buttons.add(create, 0, 1);
+        buttons.add(timeField, 0, 2);
+        int i = 2;
         for (String name : scenes.getNames()){
             i++;
             Button scnButton = new Button(name);
             scnButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    blender.blend(Scene.toScene("tmp",channels.getAll()),scenes.readScene(name),5.0);
+                    double time = 5.0;
+                    try {
+                        time = Double.parseDouble(timeField.getText());
+                    } catch (Exception e){
+                        time = 5.0;
+                    }
+
+                    blender.blend(Scene.toScene("tmp",channels.getAll()),scenes.readScene(name),time);
                 }
             });
             buttons.add(scnButton,0,i);

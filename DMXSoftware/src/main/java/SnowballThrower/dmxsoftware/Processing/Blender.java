@@ -14,37 +14,41 @@ import java.util.logging.Logger;
 public class Blender {
     Manage mng;
     Channels channels;
+    BlendSequence b;
 
     public Blender(Manage mng) {
         this.mng = mng;
         channels = mng.devs.getChannels();
     }
 
-    public void blendStep(Scene oldScene, Scene newScene, float alpha) {
-        if (newScene == null || oldScene == null)
-            return;
-        for (int i = 0; i < 512; i++) {
-            int val = (int) (oldScene.getValues()[i] * alpha + oldScene.getValues()[i] * (1 - alpha));
-            channels.get(i).setValue(val);
-        }
-    }
 
     public void blend(Scene oldScene, Scene newScene, double time) {
         System.out.println("blending " + oldScene.getName() + " to " + newScene.getName() + " in " + time + "s");
+        if(b!=null){
+            b.kill();
+            b.destroy();
+        }
         BlendSequence bs = new BlendSequence(oldScene, newScene, time, channels);
         bs.start();
+        b = bs;
     }
 
     public class BlendSequence extends Thread {
         Channels channels;
         double time;
         Scene oldScene, newScene;
+        boolean stop;
 
         public BlendSequence(Scene oldScene, Scene newScene, double time, Channels channels) {
             this.channels = channels;
             this.newScene = newScene;
             this.oldScene = oldScene;
             this.time = time;
+            stop = false;
+        }
+
+        public void kill(){
+            stop = true;
         }
 
         @Override
@@ -62,6 +66,9 @@ public class Blender {
                     Logger.getLogger(MidiConnection.class
                             .getName()).log(Level.SEVERE, null, ex);
                 }
+                if(stop) {
+                    return;
+                }
                 readyTime += sleepTime;
             }
             blendStep(1);
@@ -74,6 +81,9 @@ public class Blender {
             int newVals[] = newScene.getValues();
             int oldVals[] = oldScene.getValues();
             for (int i = 0; i < 512; i++) {
+                if(stop) {
+                    return;
+                }
                 int val = (int) (newVals[i] * alpha + oldVals[i] * (1.0 - alpha));
                 Channel ch = channels.get(i);
                 if (ch != null) {

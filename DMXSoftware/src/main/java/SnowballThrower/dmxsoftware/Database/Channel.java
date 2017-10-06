@@ -35,21 +35,21 @@ public abstract class Channel {
     }
 
     public void act() {
-        Platform.runLater(new Runnable() {
+        //Platform.runLater(new Runnable() {
 
-            @Override
-            public void run() {
+            //@Override
+            //public void run() {
 
                 for (Fader fader : faders) {
                     try {
                         fader.act();
-                        System.out.println("act Fader");
+                        //System.out.println("act Fader");
                     } catch (Exception e) {
                         System.out.println("Fehler bei fader aktualisieren.");
                     }
                 }
-            }
-        });
+            //}
+        //});
     }
 
     public int getValue() {
