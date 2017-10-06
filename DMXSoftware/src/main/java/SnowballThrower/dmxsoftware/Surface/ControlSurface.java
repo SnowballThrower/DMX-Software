@@ -11,6 +11,7 @@ import SnowballThrower.dmxsoftware.Database.DMXChannel;
 import SnowballThrower.dmxsoftware.Database.Device;
 import SnowballThrower.dmxsoftware.Database.Function;
 import SnowballThrower.dmxsoftware.Database.Type;
+import SnowballThrower.dmxsoftware.Processing.Blender;
 import SnowballThrower.dmxsoftware.Processing.Manage;
 import java.util.List;
 import javafx.application.Application;
@@ -108,6 +109,16 @@ public class ControlSurface extends Application {
         });
 
         btn3.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                stack.getChildren().clear();
+                stack.getChildren().add(scenes());
+                stack.setAlignment(Pos.TOP_CENTER);
+            }
+        });
+
+        btn4.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
@@ -344,5 +355,11 @@ public class ControlSurface extends Application {
         } catch (Exception ex) {
 
         }
+    }
+
+    ScrollPane scenes(){
+        Scenes scenes = new Scenes();
+        Node scnGroup = scenes.getSceneButtons(new Blender(manager),dmxChannels);
+        return new ScrollPane(scnGroup);
     }
 }

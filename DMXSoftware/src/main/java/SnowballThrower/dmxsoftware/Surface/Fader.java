@@ -81,8 +81,9 @@ public class Fader {
     }
 
     public void act() {
-        if (channel.getValue() >= 0 && channel.getValue() < 256) {
-            this.value = channel.getValue();
+        int val = channel.getValue();
+        if (val >= 0 && val < 256) {
+            this.value = val;
         }
         try {
             head.setTranslateY(-((height - 2 * frameY) / max) * value);

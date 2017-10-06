@@ -25,6 +25,8 @@ public abstract class Channel {
 
     public void setValue(int value) {
         if (value >= 0 && value < 256) {
+            if(this.value == value)
+                return;
             this.value = value;
             for (Fader fader : faders) {
                 fader.act();
@@ -41,6 +43,7 @@ public abstract class Channel {
                 for (Fader fader : faders) {
                     try {
                         fader.act();
+                        System.out.println("act Fader");
                     } catch (Exception e) {
                         System.out.println("Fehler bei fader aktualisieren.");
                     }
