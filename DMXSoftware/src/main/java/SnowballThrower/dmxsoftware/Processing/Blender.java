@@ -26,7 +26,7 @@ public class Blender {
         System.out.println("blending " + oldScene.getName() + " to " + newScene.getName() + " in " + time + "s");
         if(b!=null){
             b.kill();
-            b.destroy();
+//            b.destroy();
         }
         BlendSequence bs = new BlendSequence(oldScene, newScene, time, channels);
         bs.start();
