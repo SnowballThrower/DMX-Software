@@ -241,7 +241,7 @@ void remoteLoop() {
 
   transmitter();
 
-  delay(rTime);
+  midiDelay(rTime);
   Serial1.flush();
   buttonRead(s);
 

@@ -90,8 +90,12 @@ void handleMidiData() {
   midiCh = receivemidi[0];
   if (noteCC == 0) {
     targetCh = receivemidi[1] + 128 * midiCh;
+    if(targetCh >= 512){ //security, now only accepting < 512
+      return;
+    }
     values[targetCh] = 2 * receivemidi[2];
   } else {
+    return; //accepting only channel data
     if (noteCC == 3) {
       handlePitch(receivemidi[1], receivemidi[2]);
     } else {
@@ -157,6 +161,14 @@ void midiButtonSend(bool fs, bool hi, byte num) {
     Serial.write(8 * fs + num);
   }
   Serial.write(0);
+}
+
+void midiDelay(double waitTime){
+  int fract = 10;
+  for(int i = 0; i < fract; i++){
+    delay(waitTime/fract);
+    serialEvent();
+  }
 }
 
 #endif
