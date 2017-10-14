@@ -53,6 +53,7 @@ public class Blender {
 
         @Override
         public void run() {
+            System.out.println("start blend");
             double alpha = 0;
             double readyTime = 0;
             int sleepTime = 40;
@@ -72,6 +73,7 @@ public class Blender {
                 readyTime += sleepTime;
             }
             blendStep(1);
+            System.out.println("stop blend");
         }
 
         private void blendStep(double alpha) {

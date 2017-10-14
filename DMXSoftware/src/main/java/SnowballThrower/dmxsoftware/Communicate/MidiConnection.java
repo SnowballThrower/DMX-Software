@@ -30,7 +30,7 @@ import javax.sound.midi.Transmitter;
  */
 public class MidiConnection extends Thread {
 
-    static final int MAX_CH = 1000;
+    static final int MAX_CH = 512;
     final int highestChannel = 517;
     MidiDevice dmxController;
     List<MidiDevice> midis;
@@ -38,6 +38,8 @@ public class MidiConnection extends Thread {
     int[] valNew;
     boolean stop;
     private long SLEEP = 2;
+    private int MIDI_BREAK = 100;
+    private long MIDI_BREAK_TIME = 2;
     Receiver midiOut;
     Transmitter midiIn;
     private Receiver midiHandler;
@@ -168,7 +170,11 @@ public class MidiConnection extends Thread {
         //System.out.println("Midi send: " + channel + " ," + value / 2);
         //System.out.println("Midi send: " + (CONTROL_CHANGE + channel / 128) + " ," + channel % 128 + " ," + value / 2);
         if (channel >= highestChannel) {
-            sendLED(1, channel - highestChannel, value);
+            //sendLED(1, channel - highestChannel, value);
+        }
+        if(channel>=512 || value < 0 || value > 255){
+            System.out.println("wrong values");
+            return;
         }
         try {
             ShortMessage message = new ShortMessage(CONTROL_CHANGE, channel / 128, channel % 128, value / 2);
@@ -186,13 +192,31 @@ public class MidiConnection extends Thread {
 
     private void loop() {
         int i;
+        int counter = 0;
         for (i = 0; i < MAX_CH; i++) {
             int valBuff = valNew[i];
             if (valOld[i] != valBuff) {
                 valOld[i] = valBuff;
-                send(i, valOld[i]);
+                byte val = (byte) valOld[i];
+                if(val >= 0 && val < 256){
+                    byte channel = (byte) i;
+                    if(channel >= 0 && channel < 512){
+                        send(channel, val);
+                    }
+                }
+                counter++;
             }
-            receive();
+            /*receive();
+            if(counter > MIDI_BREAK){
+                try {
+                    Thread.sleep(MIDI_BREAK_TIME);
+
+                } catch (InterruptedException ex) {
+                Logger.getLogger(MidiConnection.class
+                    .getName()).log(Level.SEVERE, null, ex);
+                }
+                counter = 0;
+            }*/
         }
         try {
             Thread.sleep(SLEEP);
