@@ -55,7 +55,7 @@ public class Scenes {
         }
     }
     public Scene readScene(String name){
-        int values[] = new int[600];
+        int values[] = new int[512];
         try {
             File file = new File("Data/Scenes/" + name + ".scn");
             FileReader fileReader = new FileReader(file);
@@ -63,7 +63,7 @@ public class Scenes {
             StringBuffer stringBuffer = new StringBuffer();
             String line;
             int i = 0;
-            while ((line = bufferedReader.readLine()) != null && i <600) {
+            while ((line = bufferedReader.readLine()) != null && i <512) {
                 values[i] = Integer.parseInt(line);
                 //System.out.println(i+": "+values[i]);
                 i++;

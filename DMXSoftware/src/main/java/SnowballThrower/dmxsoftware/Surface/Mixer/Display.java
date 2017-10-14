@@ -1,7 +1,6 @@
 package SnowballThrower.dmxsoftware.Surface.Mixer;
 
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

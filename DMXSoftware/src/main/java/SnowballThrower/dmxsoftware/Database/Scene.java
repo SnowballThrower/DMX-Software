@@ -22,7 +22,7 @@ public class Scene {
     public Scene(String name){
         this.name = name;
 
-        this.values = new int[600];
+        this.values = new int[512];
     }
 
     public static Scene toScene(String name, Channel channels[]) {

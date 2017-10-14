@@ -26,7 +26,7 @@ public class Blender {
         System.out.println("blending " + oldScene.getName() + " to " + newScene.getName() + " in " + time + "s");
         if(b!=null){
             b.kill();
-            b.destroy();
+//            b.destroy();
         }
         BlendSequence bs = new BlendSequence(oldScene, newScene, time, channels);
         bs.start();
@@ -53,6 +53,7 @@ public class Blender {
 
         @Override
         public void run() {
+            System.out.println("start blend");
             double alpha = 0;
             double readyTime = 0;
             int sleepTime = 40;
@@ -72,6 +73,7 @@ public class Blender {
                 readyTime += sleepTime;
             }
             blendStep(1);
+            System.out.println("stop blend");
         }
 
         private void blendStep(double alpha) {
