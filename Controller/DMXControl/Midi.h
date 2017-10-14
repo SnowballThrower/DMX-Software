@@ -137,8 +137,8 @@ void nextBytes() {
 }
 
 void serialEvent() {
-  int messageCounter = 0;
-  while (Serial.available() && messageCounter < 60) {
+  //int messageCounter = 0;
+  while (Serial.available()){// && messageCounter < 60) {
     // get the new byte:
     inByte = Serial.read();
     if (inByte > 127 && inByte < 256) {
@@ -147,7 +147,7 @@ void serialEvent() {
     if (inByte < 128 && inByte >= 0) {
       nextBytes();
     }
-    messageCounter++;
+    //messageCounter++;
   }
 }
 
