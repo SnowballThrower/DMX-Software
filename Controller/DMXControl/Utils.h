@@ -116,8 +116,8 @@ void transmit(int s) {
     Serial1.write(0);
   }
   int x = s;
-  while (x < s + (512 / transSteps)) {
-
+  while (x < s + (512 / transSteps) && x < 512) {
+  
     Serial1.write(values[x]);
     x++;
   }

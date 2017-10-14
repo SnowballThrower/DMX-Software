@@ -90,10 +90,13 @@ void handleMidiData() {
   midiCh = receivemidi[0];
   if (noteCC == 0) {
     targetCh = receivemidi[1] + 128 * midiCh;
-    if(targetCh >= 512){ //security, now only accepting < 512
+    if(targetCh >= 512 || targetCh < 0){ //security, now only accepting < 512
       return;
+    } else {
+      if(receivemidi[2] >= 0 && receivemidi[2] < 128){
+        values[targetCh] = 2 * receivemidi[2];
+      }
     }
-    values[targetCh] = 2 * receivemidi[2];
   } else {
     return; //accepting only channel data
     if (noteCC == 3) {
@@ -134,15 +137,17 @@ void nextBytes() {
 }
 
 void serialEvent() {
-  while (Serial.available()) {
+  int messageCounter = 0;
+  while (Serial.available() && messageCounter < 60) {
     // get the new byte:
     inByte = Serial.read();
-    if (inByte > 127) {
+    if (inByte > 127 && inByte < 256) {
       firstByte();
     }
-    if (inByte < 128) {
+    if (inByte < 128 && inByte >= 0) {
       nextBytes();
     }
+    messageCounter++;
   }
 }
 

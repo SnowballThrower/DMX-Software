@@ -242,7 +242,7 @@ void remoteLoop() {
   transmitter();
 
   midiDelay(rTime);
-  Serial1.flush();
+//  Serial1.flush();
   buttonRead(s);
 
   midiActive = true;
